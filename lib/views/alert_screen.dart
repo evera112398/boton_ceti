@@ -62,7 +62,8 @@ class _AlertScreenState extends State<AlertScreen> {
                               bottomRight: Radius.circular(20)),
                           gradient: LinearGradient(
                             colors: [
-                              Color.fromRGBO(42, 166, 255, 0.65),
+                              Color.fromRGBO(0, 104, 178, 0.85),
+                              Color.fromRGBO(0, 104, 178, 0.85),
                               Color.fromRGBO(58, 1, 102, 0.65)
                             ],
                             begin: Alignment.topLeft,
@@ -116,7 +117,7 @@ class _AlertScreenState extends State<AlertScreen> {
             ),
           ),
           Expanded(
-            flex: 3,
+            flex: 4,
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.all(10),
