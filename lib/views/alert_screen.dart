@@ -1,6 +1,4 @@
 import 'dart:ui';
-
-import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/models/alert_card.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +10,6 @@ class AlertScreen extends StatefulWidget {
 }
 
 class _AlertScreenState extends State<AlertScreen> {
-  final String _selectedItem = '';
   @override
   Widget build(BuildContext context) {
     // double screenHeight = MediaQuery.of(context).size.height;
@@ -27,6 +24,7 @@ class _AlertScreenState extends State<AlertScreen> {
               child: Stack(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(bottom: 3),
                     height: null,
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -86,24 +84,22 @@ class _AlertScreenState extends State<AlertScreen> {
                               'assets/images/ceti blanco.png',
                             ),
                           ),
-                          const SizedBox(height: 10),
-                          const Row(
+                          const SizedBox(height: 15),
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                'Bienvenido: ',
-                                style: TextStyle(
-                                  fontFamily: 'Nutmeg',
-                                  fontSize: 24,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Text(
-                                'Edwin Vera',
-                                style: TextStyle(
-                                  fontFamily: 'Nutmeg',
-                                  fontSize: 24,
-                                  color: Colors.white,
+                              SizedBox(
+                                width: constraints.maxWidth * 0.8,
+                                child: const FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    'Bienvenido: Edwin Manuel Vera',
+                                    style: TextStyle(
+                                      fontFamily: 'Nutmeg',
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],

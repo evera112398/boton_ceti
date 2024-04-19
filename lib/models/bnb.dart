@@ -25,7 +25,7 @@ class _BNavigationBarState extends State<BNavigationBar> {
   Widget build(BuildContext context) {
     return AnimatedNotchBottomBar(
       color: VariablesGlobales.coloresApp[1],
-      durationInMilliSeconds: 200,
+      durationInMilliSeconds: 100,
       notchBottomBarController: widget.nbController,
       bottomBarItems: navIcons.map((icon) {
         return BottomBarItem(
