@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _currentPageIndex = pageIndex;
       _pageController.animateToPage(pageIndex,
-          duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+          duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
     });
   }
 
