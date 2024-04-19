@@ -93,7 +93,7 @@ class _AlertScreenState extends State<AlertScreen> {
                                 child: const FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: Text(
-                                    'Bienvenido: Edwin Manuel Vera',
+                                    'Bienvenido: Usuario',
                                     style: TextStyle(
                                       fontFamily: 'Nutmeg',
                                       color: Colors.white,
