@@ -24,15 +24,16 @@ class _BNavigationBarState extends State<BNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return AnimatedNotchBottomBar(
+      color: VariablesGlobales.coloresApp[1],
       durationInMilliSeconds: 200,
       notchBottomBarController: widget.nbController,
       bottomBarItems: navIcons.map((icon) {
         return BottomBarItem(
           inActiveItem: Icon(
             icon,
-            color: Colors.grey,
+            color: Colors.white,
           ),
-          activeItem: Icon(icon, color: VariablesGlobales.coloresApp[0]),
+          activeItem: Icon(icon, color: VariablesGlobales.coloresApp[1]),
         );
       }).toList(),
       onTap: (value) => widget.callback(value),

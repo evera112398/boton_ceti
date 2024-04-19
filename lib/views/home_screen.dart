@@ -1,4 +1,5 @@
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
+import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/models/bnb.dart';
 import 'package:boton_ceti/views/alert_screen.dart';
 import 'package:boton_ceti/views/legal_docs.dart';
@@ -21,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _currentPageIndex = pageIndex;
       _pageController.animateToPage(pageIndex,
-          duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+          duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
     });
   }
 
@@ -34,26 +35,24 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            PageView(
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              children: const [
-                ProfileScreen(),
-                AlertScreen(),
-                LegalDocsScreen(),
-              ],
-            ),
-            BNavigationBar(
-              nbController: _nbController,
-              selectedIndex: _currentPageIndex,
-              callback: (pageIndex) => changePage(pageIndex),
-            ),
-          ],
-        ),
+      backgroundColor: VariablesGlobales.bgColor,
+      body: Stack(
+        children: [
+          PageView(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: const [
+              ProfileScreen(),
+              AlertScreen(),
+              LegalDocsScreen(),
+            ],
+          ),
+          BNavigationBar(
+            nbController: _nbController,
+            selectedIndex: _currentPageIndex,
+            callback: (pageIndex) => changePage(pageIndex),
+          ),
+        ],
       ),
     );
   }
