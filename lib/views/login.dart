@@ -49,7 +49,7 @@ class _LogincreenState extends State<Logincreen> {
                             offset: const Offset(0, 3),
                             blurRadius: 1,
                             spreadRadius: 2,
-                            color: Colors.black.withOpacity(0.6),
+                            color: Colors.black.withOpacity(0.4),
                           )
                         ],
                       ),
@@ -135,9 +135,33 @@ class _LogincreenState extends State<Logincreen> {
                     return Column(
                       children: [
                         Container(
+                          margin: EdgeInsets.only(
+                              top: constraints.maxHeight * 0.05),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: constraints.maxWidth * 0.8,
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    'Bienvenido',
+                                    style: TextStyle(
+                                      fontFamily: 'Nutmeg',
+                                      color: VariablesGlobales.coloresApp[1],
+                                      fontSize: 24,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topCenter,
                           child: Container(
                             margin: EdgeInsets.only(
-                                top: constraints.maxHeight * 0.13),
+                                top: constraints.maxHeight * 0.05),
                             height: constraints.maxHeight * 0.135,
                             width: constraints.maxWidth * 0.9,
                             child: TextFormField(
@@ -201,26 +225,65 @@ class _LogincreenState extends State<Logincreen> {
                         Align(
                           alignment: Alignment.topCenter,
                           child: Container(
+                            margin: const EdgeInsets.only(
+                                left: 20, right: 20, top: 40),
+                            height: constraints.maxHeight * 0.1,
+                            width: constraints.maxWidth,
+                            decoration: BoxDecoration(
+                              color: VariablesGlobales.coloresApp[1],
+                              borderRadius: BorderRadius.circular(
+                                  20.0), // Radio de los bordes del container
+                            ),
+                            child: TextButton(
+                              style: ButtonStyle(
+                                overlayColor:
+                                    MaterialStateProperty.resolveWith<Color>(
+                                  (Set<MaterialState> states) {
+                                    return Colors.transparent;
+                                  },
+                                ),
+                                splashFactory: NoSplash.splashFactory,
+                              ),
+                              child: const Text(
+                                "Ingresar",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 26),
+                              ),
+                              onPressed: () => Future.microtask(() {
+                                Navigator.of(context).push(
+                                  crearRutaNamed(
+                                      const HomeScreen(), 'homeScreen'),
+                                );
+                              }),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
                             margin: EdgeInsets.only(
-                                top: constraints.maxHeight * 0.09),
+                                top: constraints.maxHeight * 0.05),
                             height: constraints.maxHeight * 0.135,
                             width: constraints.maxWidth * 0.9,
                             child: Column(
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {},
-                                      child: Text(
-                                        'Olvidé mi contraseña',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey.shade700,
+                                Container(
+                                  margin: EdgeInsets.only(bottom: 15),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {},
+                                        child: Text(
+                                          'Olvidé mi contraseña',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey.shade700,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -248,7 +311,7 @@ class _LogincreenState extends State<Logincreen> {
                 ),
               ),
             ),
-            Expanded(
+            /* Expanded(
                 flex: 1,
                 child: Align(
                     alignment: Alignment.topCenter,
@@ -291,7 +354,7 @@ class _LogincreenState extends State<Logincreen> {
                           ),
                         );
                       },
-                    )))
+                    ))) */
           ],
         ),
       ),
