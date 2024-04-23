@@ -63,7 +63,8 @@ class _AlertScreenState extends State<AlertScreen> {
                               bottomRight: Radius.circular(20)),
                           gradient: LinearGradient(
                             colors: [
-                              Color.fromRGBO(42, 166, 255, 0.65),
+                              Color.fromRGBO(0, 104, 178, 0.85),
+                              Color.fromRGBO(0, 104, 178, 0.85),
                               Color.fromRGBO(58, 1, 102, 0.65)
                             ],
                             begin: Alignment.topLeft,
@@ -95,7 +96,7 @@ class _AlertScreenState extends State<AlertScreen> {
                                 child: const FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: Text(
-                                    'Bienvenido: Edwin Manuel Vera',
+                                    'Bienvenido: Usuario',
                                     style: TextStyle(
                                       fontFamily: 'Nutmeg',
                                       color: Colors.white,
