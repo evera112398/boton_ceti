@@ -132,119 +132,121 @@ class _LogincreenState extends State<Logincreen> {
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          return Container(
-                            padding: const EdgeInsets.all(12),
-                            child: SingleChildScrollView(
-                              physics: const BouncingScrollPhysics(),
-                              child: Column(
-                                children: [
-                                  Form(
-                                    key: _formKey,
-                                    child: AutofillGroup(
-                                      child: Column(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              margin: EdgeInsets.only(
-                                                  top: constraints.maxHeight *
-                                                      0.3),
-                                              height:
-                                                  constraints.maxHeight * 0.135,
-                                              width: constraints.maxWidth * 0.9,
-                                              child: TextFormField(
-                                                cursorColor: VariablesGlobales
-                                                    .coloresApp[0],
-                                                controller: controllerPhone,
-                                                autofillHints: const [
-                                                  AutofillHints.username
-                                                ],
-                                                onTap: () {
-                                                  isIconVisible = false;
-                                                  passwordIsHidden = true;
-                                                  setState(() {});
-                                                },
-                                                keyboardType:
-                                                    TextInputType.text,
-                                                decoration: const InputDecoration(
-                                                    icon: Icon(Icons
-                                                        .account_box_outlined),
-                                                    labelText: 'Usuario'),
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              margin: EdgeInsets.only(
-                                                  top: constraints.maxHeight *
-                                                      0.09),
-                                              height:
-                                                  constraints.maxHeight * 0.135,
-                                              width: constraints.maxWidth * 0.9,
-                                              child: TextFormField(
-                                                  cursorColor: VariablesGlobales
-                                                      .coloresApp[0],
-                                                  controller:
-                                                      controllerPassword,
-                                                  keyboardType: TextInputType
-                                                      .visiblePassword,
-                                                  autofillHints: const [
-                                                    AutofillHints.password
-                                                  ],
-                                                  onEditingComplete: () =>
-                                                      TextInput
-                                                          .finishAutofillContext(),
-                                                  obscureText: passwordIsHidden,
-                                                  decoration: InputDecoration(
-                                                      icon: const Icon(
-                                                          Icons.password),
-                                                      labelText: 'Contraseña',
-                                                      suffixIcon: isIconVisible
-                                                          ? IconButton(
-                                                              onPressed: () {
-                                                                passwordIsHidden =
-                                                                    !passwordIsHidden;
-                                                                setState(() {});
-                                                              },
-                                                              icon: Icon(passwordIsHidden
-                                                                  ? Icons
-                                                                      .visibility_off
-                                                                  : Icons
-                                                                      .visibility))
-                                                          : null),
-                                                  onChanged: (value) {
-                                                    value.length > 1
-                                                        ? isIconVisible = true
-                                                        : isIconVisible = false;
-                                                    passLength = value.length;
-                                                    setState(() {});
-                                                  },
-                                                  onTap: () {
-                                                    passLength > 1
-                                                        ? isIconVisible = true
-                                                        : null;
-                                                    setState(() {});
-                                                  }),
-                                            ),
-                                          ),
-                                        ],
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return Column(
+                      children: [
+                        Container(
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                top: constraints.maxHeight * 0.13),
+                            height: constraints.maxHeight * 0.135,
+                            width: constraints.maxWidth * 0.9,
+                            child: TextFormField(
+                              cursorColor: VariablesGlobales.coloresApp[0],
+                              controller: controllerPhone,
+                              autofillHints: const [AutofillHints.username],
+                              onTap: () {
+                                isIconVisible = false;
+                                passwordIsHidden = true;
+                                setState(() {});
+                              },
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration(
+                                  icon: Icon(Icons.account_box_outlined),
+                                  labelText: 'Usuario'),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                top: constraints.maxHeight * 0.09),
+                            height: constraints.maxHeight * 0.135,
+                            width: constraints.maxWidth * 0.9,
+                            child: TextFormField(
+                                cursorColor: VariablesGlobales.coloresApp[0],
+                                controller: controllerPassword,
+                                keyboardType: TextInputType.visiblePassword,
+                                autofillHints: const [AutofillHints.password],
+                                onEditingComplete: () =>
+                                    TextInput.finishAutofillContext(),
+                                obscureText: passwordIsHidden,
+                                decoration: InputDecoration(
+                                    icon: const Icon(Icons.password),
+                                    labelText: 'Contraseña',
+                                    suffixIcon: isIconVisible
+                                        ? IconButton(
+                                            onPressed: () {
+                                              passwordIsHidden =
+                                                  !passwordIsHidden;
+                                              setState(() {});
+                                            },
+                                            icon: Icon(passwordIsHidden
+                                                ? Icons.visibility_off
+                                                : Icons.visibility))
+                                        : null),
+                                onChanged: (value) {
+                                  value.length > 1
+                                      ? isIconVisible = true
+                                      : isIconVisible = false;
+                                  passLength = value.length;
+                                  setState(() {});
+                                },
+                                onTap: () {
+                                  passLength > 1 ? isIconVisible = true : null;
+                                  setState(() {});
+                                }),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                top: constraints.maxHeight * 0.09),
+                            height: constraints.maxHeight * 0.135,
+                            width: constraints.maxWidth * 0.9,
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {},
+                                      child: Text(
+                                        'Olvidé mi contraseña',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey.shade700,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {},
+                                      child: Text(
+                                        'Registrarme',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color:
+                                              VariablesGlobales.coloresApp[1],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          );
-                        },
-                      ),
-                    )
-                  ],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
