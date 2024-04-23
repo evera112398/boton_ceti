@@ -42,7 +42,9 @@ class _BotonCetiState extends State<BotonCeti> {
       debugShowCheckedModeBanner: false,
       title: 'Botón CETI',
       initialRoute: 'homeScreen',
-      routes: {'homeScreen': (context) => const HomeScreen()},
+      routes: {
+        'homeScreen': (context) => const HomeScreen(),
+      },
     );
   }
 }

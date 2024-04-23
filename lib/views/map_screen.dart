@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:boton_ceti/animations/page_animation.dart';
 import 'package:boton_ceti/global/global_vars.dart';
+import 'package:boton_ceti/views/no_location.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:lottie/lottie.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -17,7 +18,7 @@ class MapScreen extends StatefulWidget {
 class MapScreenState extends State<MapScreen> {
   final Completer<GoogleMapController> _controller = Completer();
   final Completer<void> _positionCompleter = Completer();
-  final LatLng _center = const LatLng(45.521563, -122.677433);
+  final LatLng _center = const LatLng(20.67561784723507, -103.34741851239684);
   final Set<Polygon> _polygon = HashSet<Polygon>();
   late Position _currentPosition;
   late bool _positionFetched = false;
@@ -39,24 +40,61 @@ class MapScreenState extends State<MapScreen> {
     super.initState();
   }
 
+  Future<void> changePermissionStatus() async {
+    _locationPermission = true;
+    getUserCurrentLocation();
+    setState(() {});
+  }
+
   Future<void> getUserCurrentLocation() async {
-    await Geolocator.requestPermission().then((value) async {
-      if (value == LocationPermission.whileInUse ||
-          value == LocationPermission.always) {
-        _locationPermission = true;
-        _currentPosition = await Geolocator.getCurrentPosition();
-        _positionFetched = true;
-        if (!_positionCompleter.isCompleted) {
-          _positionCompleter.complete();
+    bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
+    if (isLocationEnabled) {
+      await Geolocator.requestPermission().then((value) async {
+        if (value == LocationPermission.whileInUse ||
+            value == LocationPermission.always) {
+          _locationPermission = true;
+          _currentPosition = await Geolocator.getCurrentPosition();
+          _positionFetched = true;
+          if (!_positionCompleter.isCompleted) {
+            _positionCompleter.complete();
+          }
+        } else {
+          _locationPermission = false;
+          Future.microtask(
+            () {
+              Navigator.of(context).push(
+                crearRutaNamed(
+                  NoLocationScreen(
+                    callback: changePermissionStatus,
+                    locationErrorId: VariablesGlobales
+                        .locationIdentifier['notLocationPermission'],
+                  ),
+                  'notLocationPermission',
+                ),
+              );
+            },
+          );
         }
-      } else {
-        _locationPermission = false;
-      }
-      setState(() {});
-    }).onError((error, stackTrace) async {
-      await Geolocator.requestPermission();
-      print('ERROR$error');
-    });
+        setState(() {});
+      }).onError((error, stackTrace) async {
+        print('ERROR$error');
+      });
+    } else {
+      Future.microtask(
+        () {
+          Navigator.of(context).push(
+            crearRutaNamed(
+              NoLocationScreen(
+                callback: changePermissionStatus,
+                locationErrorId:
+                    VariablesGlobales.locationIdentifier['locationDisabled'],
+              ),
+              'locationNotEnabled',
+            ),
+          );
+        },
+      );
+    }
   }
 
   void _onMapCreated(GoogleMapController controller) async {
@@ -88,38 +126,23 @@ class MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _locationPermission
-          ? GoogleMap(
-              mapType: MapType.normal,
-              myLocationEnabled: _locationPermission,
-              compassEnabled: true,
-              buildingsEnabled: true,
-              rotateGesturesEnabled: true,
-              scrollGesturesEnabled: true,
-              zoomControlsEnabled: false,
-              zoomGesturesEnabled: false,
-              myLocationButtonEnabled: false,
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: CameraPosition(
-                target: _center,
-                zoom: 11.0,
-              ),
-              polygons: _polygon,
-            )
-          : LayoutBuilder(
-              builder: (context, constraints) {
-                return Center(
-                  child: Container(
-                    height: constraints.maxHeight * 0.8,
-                    width: constraints.maxWidth * 0.9,
-                    color: Colors.purple,
-                    child: Text(
-                      constraints.maxHeight.toString(),
-                    ),
-                  ),
-                );
-              },
-            ),
+      body: GoogleMap(
+        mapType: MapType.normal,
+        myLocationEnabled: _locationPermission,
+        compassEnabled: true,
+        buildingsEnabled: true,
+        rotateGesturesEnabled: true,
+        scrollGesturesEnabled: true,
+        zoomControlsEnabled: false,
+        zoomGesturesEnabled: false,
+        myLocationButtonEnabled: false,
+        onMapCreated: _onMapCreated,
+        initialCameraPosition: CameraPosition(
+          target: _center,
+          zoom: 11.0,
+        ),
+        polygons: _polygon,
+      ),
     );
   }
 }
