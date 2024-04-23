@@ -1,5 +1,7 @@
 import 'dart:ui';
+import 'package:boton_ceti/animations/page_animation.dart';
 import 'package:boton_ceti/models/alert_card.dart';
+import 'package:boton_ceti/views/map_screen.dart';
 import 'package:flutter/material.dart';
 
 class AlertScreen extends StatefulWidget {
@@ -29,8 +31,9 @@ class _AlertScreenState extends State<AlertScreen> {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(20),
-                          bottomRight: Radius.circular(20)),
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20),
+                      ),
                       boxShadow: [
                         BoxShadow(
                           offset: const Offset(0, 3),
@@ -112,7 +115,7 @@ class _AlertScreenState extends State<AlertScreen> {
             ),
           ),
           Expanded(
-            flex: 3,
+            flex: 4,
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.all(10),
@@ -127,13 +130,21 @@ class _AlertScreenState extends State<AlertScreen> {
                             physics: const BouncingScrollPhysics(),
                             child: Column(
                               children: [
-                                AlertCard(
-                                  alertType: 'SEGURIDAD',
-                                  alertIcon: Icons.copy,
-                                  containerHeight: constraints.maxHeight,
-                                  alertDescription:
-                                      'Viví o presencié un incidente de seguridad.',
-                                  imagePath: 'assets/icons/seguridad.png',
+                                GestureDetector(
+                                  onTap: () => Future.microtask(() {
+                                    Navigator.of(context).push(
+                                      crearRutaNamed(
+                                          const MapScreen(), 'alertRunning'),
+                                    );
+                                  }),
+                                  child: AlertCard(
+                                    alertType: 'SEGURIDAD',
+                                    alertIcon: Icons.copy,
+                                    containerHeight: constraints.maxHeight,
+                                    alertDescription:
+                                        'Viví o presencié un incidente de seguridad.',
+                                    imagePath: 'assets/icons/seguridad.png',
+                                  ),
                                 ),
                                 const SizedBox(height: 10),
                                 AlertCard(
