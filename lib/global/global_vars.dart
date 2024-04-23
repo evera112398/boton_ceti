@@ -7,6 +7,22 @@ class VariablesGlobales {
     const Color.fromRGBO(248, 143, 31, 1),
     const Color.fromRGBO(0, 104, 178, 1),
   ];
+
+  static Map locationIdentifier = {
+    'locationDisabled': 0,
+    'notLocationPermission': 1
+  };
+
+  static List<String> locationErrorTitleMessages = [
+    'Activar los servicios de ubicación.',
+    'Permitir acceso a la ubicación'
+  ];
+
+  static List<String> locationErrorContentMessages = [
+    'Para poder proceder con las alarmas, es necesario activar los servicios de ubicación.',
+    'El acceso a la ubicación es obligatorio, ya que este permiso lo utilizamos para poder obtener tu ubicación y emitir la alarma.'
+  ];
+
   static List<String> planteles = [
     'Colomos',
     'Tonalá',

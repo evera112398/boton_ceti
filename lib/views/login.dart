@@ -1,8 +1,6 @@
 import 'dart:ui';
 import 'package:boton_ceti/animations/page_animation.dart';
-import 'package:boton_ceti/models/alert_card.dart';
 import 'package:boton_ceti/views/home_screen.dart';
-import 'package:boton_ceti/views/map_screen.dart';
 import 'package:boton_ceti/global/global_vars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,8 +22,8 @@ class _LogincreenState extends State<Logincreen> {
   int passLength = 0;
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
+    // double screenHeight = MediaQuery.of(context).size.height;
+    // double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -259,8 +257,8 @@ class _LogincreenState extends State<Logincreen> {
                         return Align(
                           alignment: Alignment.topCenter,
                           child: Container(
-                            margin:
-                                EdgeInsets.only(left: 20, right: 20, top: 20),
+                            margin: const EdgeInsets.only(
+                                left: 20, right: 20, top: 20),
                             height: constraints.maxHeight * 0.5,
                             width: constraints.maxWidth,
                             decoration: BoxDecoration(
