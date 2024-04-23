@@ -1,5 +1,6 @@
 import 'package:boton_ceti/controllers/alertas_controller.dart';
 import 'package:boton_ceti/views/home_screen.dart';
+import 'package:boton_ceti/views/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -41,8 +42,8 @@ class _BotonCetiState extends State<BotonCeti> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Botón CETI',
-      initialRoute: 'homeScreen',
-      routes: {'homeScreen': (context) => const HomeScreen()},
+      initialRoute: 'logincreen',
+      routes: {'logincreen': (context) => const Logincreen()},
     );
   }
 }
