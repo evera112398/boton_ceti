@@ -1,3 +1,4 @@
+import 'package:boton_ceti/global/global_vars.dart';
 import 'package:flutter/material.dart';
 
 class AlertDataBottomSheet extends StatefulWidget {
@@ -60,7 +61,7 @@ class _AlertDataBottomSheetState extends State<AlertDataBottomSheet> {
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black,
-                        blurRadius: 10,
+                        blurRadius: 3,
                         spreadRadius: 1,
                         offset: Offset(0, 1),
                       ),
@@ -106,8 +107,8 @@ class _AlertDataBottomSheetState extends State<AlertDataBottomSheet> {
                   width: 100,
                   margin: const EdgeInsets.only(top: 10, bottom: 10),
                   height: 5,
-                  decoration: const BoxDecoration(
-                    color: Colors.black54,
+                  decoration: BoxDecoration(
+                    color: VariablesGlobales.coloresApp[3],
                     shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.all(
                       Radius.circular(8.0),
