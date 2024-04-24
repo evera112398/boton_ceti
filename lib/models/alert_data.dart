@@ -43,13 +43,13 @@ class _AlertDataBottomSheetState extends State<AlertDataBottomSheet> {
         return DraggableScrollableSheet(
           key: sheet,
           initialChildSize: 0.1,
-          maxChildSize: 0.4,
+          maxChildSize: 0.5,
           minChildSize: 0.1,
           expand: true,
           snap: true,
           snapSizes: const [
             0.1,
-            0.4,
+            0.5,
           ],
           builder: (context, scrollController) {
             return LayoutBuilder(
@@ -74,9 +74,10 @@ class _AlertDataBottomSheetState extends State<AlertDataBottomSheet> {
                     physics: const BouncingScrollPhysics(),
                     controller: scrollController,
                     slivers: [
+                      topButtonIndicator(),
                       SliverToBoxAdapter(
                         child: SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.4,
+                          height: MediaQuery.of(context).size.height * 0.45,
                           width: double.infinity,
                           child: widget.child,
                         ),
@@ -89,6 +90,35 @@ class _AlertDataBottomSheetState extends State<AlertDataBottomSheet> {
           },
         );
       },
+    );
+  }
+
+  SliverToBoxAdapter topButtonIndicator() {
+    return SliverToBoxAdapter(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Center(
+            child: Wrap(
+              children: [
+                Container(
+                  width: 100,
+                  margin: const EdgeInsets.only(top: 10, bottom: 10),
+                  height: 5,
+                  decoration: const BoxDecoration(
+                    color: Colors.black54,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(8.0),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

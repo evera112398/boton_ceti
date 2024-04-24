@@ -41,13 +41,13 @@ class _LogincreenState extends State<Logincreen> {
                       height: null,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(20),
                           bottomRight: Radius.circular(20),
                         ),
                         boxShadow: [
                           BoxShadow(
-                            offset: Offset(0, 3),
+                            offset: const Offset(0, 3),
                             blurRadius: 1,
                             spreadRadius: 2,
                             color: Colors.black.withOpacity(0.4),
@@ -269,7 +269,7 @@ class _LogincreenState extends State<Logincreen> {
                             child: Column(
                               children: [
                                 Container(
-                                  margin: EdgeInsets.only(bottom: 15),
+                                  margin: const EdgeInsets.only(bottom: 15),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [

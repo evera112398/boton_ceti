@@ -1,5 +1,4 @@
 import 'package:boton_ceti/controllers/alertas_controller.dart';
-import 'package:boton_ceti/views/home_screen.dart';
 import 'package:boton_ceti/views/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

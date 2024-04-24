@@ -36,15 +36,13 @@ class _AlertBuilderState extends State<AlertBuilder> {
                     ),
                     Expanded(
                       flex: 4,
-                      child: Container(
-                        child: FittedBox(
-                          fit: BoxFit.contain,
-                          child: Text(
-                            widget.alertTitle,
-                            style: const TextStyle(
-                              fontFamily: 'Nutmeg',
-                              fontWeight: FontWeight.bold,
-                            ),
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(
+                          widget.alertTitle,
+                          style: const TextStyle(
+                            fontFamily: 'Nutmeg',
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -88,54 +86,52 @@ class _AlertBuilderState extends State<AlertBuilder> {
               flex: 2,
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  return Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                widget.alertText,
-                                style: TextStyle(
-                                  fontFamily: 'Nutmeg',
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: constraints.maxHeight * 0.15,
-                                ),
-                                textAlign: TextAlign.center,
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              widget.alertText,
+                              style: TextStyle(
+                                fontFamily: 'Nutmeg',
+                                fontWeight: FontWeight.w300,
+                                fontSize: constraints.maxHeight * 0.15,
                               ),
+                              textAlign: TextAlign.center,
                             ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red[700],
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red[700],
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                  onPressed: () {},
-                                  child: const Text(
-                                    'Terminar alerta',
-                                    style: TextStyle(
-                                      fontFamily: 'Nutmeg',
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                ),
+                                onPressed: () {},
+                                child: const Text(
+                                  'Terminar alerta',
+                                  style: TextStyle(
+                                    fontFamily: 'Nutmeg',
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
                             ),
-                          ],
-                        )
-                      ],
-                    ),
+                          ),
+                        ],
+                      )
+                    ],
                   );
                 },
               ),

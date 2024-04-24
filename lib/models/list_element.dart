@@ -9,7 +9,7 @@ class ListElement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 5),
+      margin: const EdgeInsets.symmetric(vertical: 5),
       child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           height: 70,
@@ -26,11 +26,11 @@ class ListElement extends StatelessWidget {
             ],
           ),
           child: Container(
-            margin: EdgeInsets.all(10),
+            margin: const EdgeInsets.all(10),
             child: Row(
               children: [
                 Container(
-                    margin: EdgeInsets.only(right: 10),
+                    margin: const EdgeInsets.only(right: 10),
                     child: Icon(
                       icon,
                       color: VariablesGlobales.coloresApp[2],
@@ -41,9 +41,9 @@ class ListElement extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 20, color: VariablesGlobales.coloresApp[2]),
                 ),
-                Spacer(),
+                const Spacer(),
                 Container(
-                    margin: EdgeInsets.only(right: 10),
+                    margin: const EdgeInsets.only(right: 10),
                     child: Icon(
                       Icons.arrow_forward_ios,
                       color: VariablesGlobales.coloresApp[2],
