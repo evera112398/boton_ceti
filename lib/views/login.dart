@@ -25,6 +25,7 @@ class _LogincreenState extends State<Logincreen> {
     // double screenHeight = MediaQuery.of(context).size.height;
     // double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: VariablesGlobales.bgColor,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
@@ -40,16 +41,16 @@ class _LogincreenState extends State<Logincreen> {
                       height: null,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(
+                        borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(20),
                           bottomRight: Radius.circular(20),
                         ),
                         boxShadow: [
                           BoxShadow(
-                            offset: const Offset(0, 3),
+                            offset: Offset(0, 3),
                             blurRadius: 1,
                             spreadRadius: 2,
-                            color: Colors.black.withOpacity(0.6),
+                            color: Colors.black.withOpacity(0.4),
                           )
                         ],
                       ),
@@ -130,123 +131,188 @@ class _LogincreenState extends State<Logincreen> {
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          return Container(
-                            padding: const EdgeInsets.all(12),
-                            child: SingleChildScrollView(
-                              physics: const BouncingScrollPhysics(),
-                              child: Column(
-                                children: [
-                                  Form(
-                                    key: _formKey,
-                                    child: AutofillGroup(
-                                      child: Column(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              margin: EdgeInsets.only(
-                                                  top: constraints.maxHeight *
-                                                      0.3),
-                                              height:
-                                                  constraints.maxHeight * 0.135,
-                                              width: constraints.maxWidth * 0.9,
-                                              child: TextFormField(
-                                                cursorColor: VariablesGlobales
-                                                    .coloresApp[0],
-                                                controller: controllerPhone,
-                                                autofillHints: const [
-                                                  AutofillHints.username
-                                                ],
-                                                onTap: () {
-                                                  isIconVisible = false;
-                                                  passwordIsHidden = true;
-                                                  setState(() {});
-                                                },
-                                                keyboardType:
-                                                    TextInputType.text,
-                                                decoration: const InputDecoration(
-                                                    icon: Icon(Icons
-                                                        .account_box_outlined),
-                                                    labelText: 'Usuario'),
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              margin: EdgeInsets.only(
-                                                  top: constraints.maxHeight *
-                                                      0.09),
-                                              height:
-                                                  constraints.maxHeight * 0.135,
-                                              width: constraints.maxWidth * 0.9,
-                                              child: TextFormField(
-                                                  cursorColor: VariablesGlobales
-                                                      .coloresApp[0],
-                                                  controller:
-                                                      controllerPassword,
-                                                  keyboardType: TextInputType
-                                                      .visiblePassword,
-                                                  autofillHints: const [
-                                                    AutofillHints.password
-                                                  ],
-                                                  onEditingComplete: () =>
-                                                      TextInput
-                                                          .finishAutofillContext(),
-                                                  obscureText: passwordIsHidden,
-                                                  decoration: InputDecoration(
-                                                      icon: const Icon(
-                                                          Icons.password),
-                                                      labelText: 'Contraseña',
-                                                      suffixIcon: isIconVisible
-                                                          ? IconButton(
-                                                              onPressed: () {
-                                                                passwordIsHidden =
-                                                                    !passwordIsHidden;
-                                                                setState(() {});
-                                                              },
-                                                              icon: Icon(passwordIsHidden
-                                                                  ? Icons
-                                                                      .visibility_off
-                                                                  : Icons
-                                                                      .visibility))
-                                                          : null),
-                                                  onChanged: (value) {
-                                                    value.length > 1
-                                                        ? isIconVisible = true
-                                                        : isIconVisible = false;
-                                                    passLength = value.length;
-                                                    setState(() {});
-                                                  },
-                                                  onTap: () {
-                                                    passLength > 1
-                                                        ? isIconVisible = true
-                                                        : null;
-                                                    setState(() {});
-                                                  }),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(
+                              top: constraints.maxHeight * 0.05),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: constraints.maxWidth * 0.8,
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    'Bienvenido',
+                                    style: TextStyle(
+                                      fontFamily: 'Nutmeg',
+                                      color: VariablesGlobales.coloresApp[1],
+                                      fontSize: 24,
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
+                            ],
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                top: constraints.maxHeight * 0.05),
+                            height: constraints.maxHeight * 0.135,
+                            width: constraints.maxWidth * 0.9,
+                            child: TextFormField(
+                              cursorColor: VariablesGlobales.coloresApp[0],
+                              controller: controllerPhone,
+                              autofillHints: const [AutofillHints.username],
+                              onTap: () {
+                                isIconVisible = false;
+                                passwordIsHidden = true;
+                                setState(() {});
+                              },
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration(
+                                  icon: Icon(Icons.account_box_outlined),
+                                  labelText: 'Usuario'),
                             ),
-                          );
-                        },
-                      ),
-                    )
-                  ],
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                top: constraints.maxHeight * 0.09),
+                            height: constraints.maxHeight * 0.135,
+                            width: constraints.maxWidth * 0.9,
+                            child: TextFormField(
+                                cursorColor: VariablesGlobales.coloresApp[0],
+                                controller: controllerPassword,
+                                keyboardType: TextInputType.visiblePassword,
+                                autofillHints: const [AutofillHints.password],
+                                onEditingComplete: () =>
+                                    TextInput.finishAutofillContext(),
+                                obscureText: passwordIsHidden,
+                                decoration: InputDecoration(
+                                    icon: const Icon(Icons.password),
+                                    labelText: 'Contraseña',
+                                    suffixIcon: isIconVisible
+                                        ? IconButton(
+                                            onPressed: () {
+                                              passwordIsHidden =
+                                                  !passwordIsHidden;
+                                              setState(() {});
+                                            },
+                                            icon: Icon(passwordIsHidden
+                                                ? Icons.visibility_off
+                                                : Icons.visibility))
+                                        : null),
+                                onChanged: (value) {
+                                  value.length > 1
+                                      ? isIconVisible = true
+                                      : isIconVisible = false;
+                                  passLength = value.length;
+                                  setState(() {});
+                                },
+                                onTap: () {
+                                  passLength > 1 ? isIconVisible = true : null;
+                                  setState(() {});
+                                }),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            margin: const EdgeInsets.only(
+                                left: 20, right: 20, top: 40),
+                            height: constraints.maxHeight * 0.1,
+                            width: constraints.maxWidth,
+                            decoration: BoxDecoration(
+                              color: VariablesGlobales.coloresApp[1],
+                              borderRadius: BorderRadius.circular(
+                                  20.0), // Radio de los bordes del container
+                            ),
+                            child: TextButton(
+                              style: ButtonStyle(
+                                overlayColor:
+                                    MaterialStateProperty.resolveWith<Color>(
+                                  (Set<MaterialState> states) {
+                                    return Colors.transparent;
+                                  },
+                                ),
+                                splashFactory: NoSplash.splashFactory,
+                              ),
+                              child: const Text(
+                                "Ingresar",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 26),
+                              ),
+                              onPressed: () => Future.microtask(() {
+                                Navigator.of(context).push(
+                                  crearRutaNamed(
+                                      const HomeScreen(), 'homeScreen'),
+                                );
+                              }),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                top: constraints.maxHeight * 0.05),
+                            height: constraints.maxHeight * 0.135,
+                            width: constraints.maxWidth * 0.9,
+                            child: Column(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(bottom: 15),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {},
+                                        child: Text(
+                                          'Olvidé mi contraseña',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey.shade700,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {},
+                                      child: Text(
+                                        'Registrarme',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color:
+                                              VariablesGlobales.coloresApp[1],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
-            Expanded(
+            /* Expanded(
                 flex: 1,
                 child: Align(
                     alignment: Alignment.topCenter,
@@ -289,7 +355,7 @@ class _LogincreenState extends State<Logincreen> {
                           ),
                         );
                       },
-                    )))
+                    ))) */
           ],
         ),
       ),

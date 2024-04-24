@@ -18,8 +18,8 @@ class BNavigationBar extends StatefulWidget {
 }
 
 class _BNavigationBarState extends State<BNavigationBar> {
-  List<IconData> navIcons = [Icons.person, Icons.home, Icons.settings];
-  List<String> navTitle = ["Perfil", "Inicio", "Configuraciones"];
+  List<IconData> navIcons = [Icons.map_outlined, Icons.home, Icons.person];
+  List<String> navTitle = ["Mapa", "Inicio", "Configuraciones"];
 
   @override
   Widget build(BuildContext context) {

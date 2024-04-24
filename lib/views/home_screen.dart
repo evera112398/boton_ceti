@@ -3,6 +3,8 @@ import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/models/bnb.dart';
 import 'package:boton_ceti/views/alert_screen.dart';
 import 'package:boton_ceti/views/legal_docs.dart';
+import 'package:boton_ceti/views/map.dart';
+import 'package:boton_ceti/views/map_screen.dart';
 import 'package:boton_ceti/views/profile_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -41,11 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
           PageView(
             controller: _pageController,
             physics: const NeverScrollableScrollPhysics(),
-            children: const [
-              ProfileScreen(),
-              AlertScreen(),
-              LegalDocsScreen(),
-            ],
+            children: const [Map(), AlertScreen(), ProfileScreen()],
           ),
           BNavigationBar(
             nbController: _nbController,
