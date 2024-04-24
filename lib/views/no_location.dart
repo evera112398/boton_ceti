@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:boton_ceti/animations/page_animation.dart';
 import 'package:boton_ceti/global/global_vars.dart';
+import 'package:boton_ceti/views/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:lottie/lottie.dart';
@@ -195,10 +197,13 @@ class _NoLocationScreenState extends State<NoLocationScreen>
                                       child: SizedBox(
                                         height: constraints.maxHeight * 0.35,
                                         child: ElevatedButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).popUntil(
-                                            ModalRoute.withName('homeScreen'),
-                                          ),
+                                          onPressed: () => Navigator.of(context)
+                                              .pushAndRemoveUntil(
+                                                  crearRutaNamed(
+                                                    const HomeScreen(),
+                                                    'homeScreen',
+                                                  ),
+                                                  (route) => false),
                                           style: ButtonStyle(
                                             shape: MaterialStateProperty.all(
                                               RoundedRectangleBorder(
