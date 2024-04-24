@@ -6,6 +6,7 @@ class VariablesGlobales {
   static List<Color> coloresApp = [
     const Color.fromRGBO(248, 143, 31, 1),
     const Color.fromRGBO(0, 104, 178, 1),
+    const Color.fromARGB(255, 107, 107, 107),
   ];
 
   static Map locationIdentifier = {

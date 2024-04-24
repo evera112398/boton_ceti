@@ -25,6 +25,7 @@ class _LogincreenState extends State<Logincreen> {
     // double screenHeight = MediaQuery.of(context).size.height;
     // double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: VariablesGlobales.bgColor,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
@@ -40,13 +41,13 @@ class _LogincreenState extends State<Logincreen> {
                       height: null,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(
+                        borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(20),
                           bottomRight: Radius.circular(20),
                         ),
                         boxShadow: [
                           BoxShadow(
-                            offset: const Offset(0, 3),
+                            offset: Offset(0, 3),
                             blurRadius: 1,
                             spreadRadius: 2,
                             color: Colors.black.withOpacity(0.4),
