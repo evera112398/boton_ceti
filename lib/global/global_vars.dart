@@ -8,6 +8,8 @@ class VariablesGlobales {
     const Color.fromRGBO(248, 143, 31, 1),
     const Color.fromRGBO(0, 104, 178, 1),
     const Color.fromARGB(255, 107, 107, 107),
+    const Color.fromARGB(255, 141, 198, 238),
+    const Color.fromARGB(255, 42, 106, 151),
   ];
 
   static Map locationIdentifier = {

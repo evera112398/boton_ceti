@@ -1,3 +1,4 @@
+import 'package:boton_ceti/global/global_vars.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -40,7 +41,8 @@ class _AlertBuilderState extends State<AlertBuilder> {
                         fit: BoxFit.contain,
                         child: Text(
                           widget.alertTitle,
-                          style: const TextStyle(
+                          style: TextStyle(
+                            color: VariablesGlobales.coloresApp[4],
                             fontFamily: 'Nutmeg',
                             fontWeight: FontWeight.bold,
                           ),
@@ -83,6 +85,7 @@ class _AlertBuilderState extends State<AlertBuilder> {
                             child: Text(
                               widget.alertText,
                               style: TextStyle(
+                                color: VariablesGlobales.coloresApp[2],
                                 fontFamily: 'Nutmeg',
                                 fontWeight: FontWeight.w300,
                                 fontSize: constraints.maxHeight * 0.15,
@@ -100,16 +103,18 @@ class _AlertBuilderState extends State<AlertBuilder> {
                                   const EdgeInsets.symmetric(horizontal: 10),
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red[700],
+                                  backgroundColor:
+                                      VariablesGlobales.coloresApp[1],
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                 ),
                                 onPressed: () {},
                                 child: const Text(
-                                  'Terminar alerta',
+                                  'Finalizar alerta',
                                   style: TextStyle(
                                     fontFamily: 'Nutmeg',
+                                    color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
