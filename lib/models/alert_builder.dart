@@ -1,16 +1,16 @@
+import 'package:boton_ceti/data/alerts_data.dart';
 import 'package:boton_ceti/global/global_vars.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class AlertBuilder extends StatefulWidget {
-  final String assetPath;
-  final String alertTitle;
-  final String alertText;
-  const AlertBuilder(
-      {super.key,
-      required this.assetPath,
-      required this.alertTitle,
-      required this.alertText});
+  final Function() callback;
+  final AlertData alertData;
+  const AlertBuilder({
+    super.key,
+    required this.alertData,
+    required this.callback,
+  });
 
   @override
   State<AlertBuilder> createState() => _AlertBuilderState();
@@ -40,9 +40,9 @@ class _AlertBuilderState extends State<AlertBuilder> {
                       child: FittedBox(
                         fit: BoxFit.contain,
                         child: Text(
-                          widget.alertTitle,
+                          widget.alertData.alertTitle,
                           style: TextStyle(
-                            color: VariablesGlobales.coloresApp[4],
+                            color: Colors.grey[700],
                             fontFamily: 'Nutmeg',
                             fontWeight: FontWeight.bold,
                           ),
@@ -61,7 +61,6 @@ class _AlertBuilderState extends State<AlertBuilder> {
             Expanded(
               flex: 3,
               child: Container(
-                color: Colors.purple,
                 child: Lottie.asset(
                   'assets/lotties/alert.json',
                   fit: BoxFit.cover,
@@ -83,9 +82,9 @@ class _AlertBuilderState extends State<AlertBuilder> {
                         children: [
                           Expanded(
                             child: Text(
-                              widget.alertText,
+                              widget.alertData.alertText,
                               style: TextStyle(
-                                color: VariablesGlobales.coloresApp[2],
+                                color: Colors.grey[700],
                                 fontFamily: 'Nutmeg',
                                 fontWeight: FontWeight.w300,
                                 fontSize: constraints.maxHeight * 0.15,
@@ -109,7 +108,7 @@ class _AlertBuilderState extends State<AlertBuilder> {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                 ),
-                                onPressed: () {},
+                                onPressed: () => widget.callback(),
                                 child: const Text(
                                   'Finalizar alerta',
                                   style: TextStyle(

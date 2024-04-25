@@ -1,18 +1,15 @@
+import 'package:boton_ceti/data/alerts_data.dart';
 import 'package:flutter/material.dart';
 
 class AlertCard extends StatelessWidget {
-  final String alertType;
-  final String alertDescription;
-  final String imagePath;
+  final AlertData alertData;
   final IconData alertIcon;
   final double containerHeight;
   const AlertCard(
       {super.key,
-      required this.alertType,
       required this.alertIcon,
       required this.containerHeight,
-      required this.alertDescription,
-      required this.imagePath});
+      required this.alertData});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +40,7 @@ class AlertCard extends StatelessWidget {
                     SizedBox(
                       height: null,
                       width: constraints.maxHeight * 0.65,
-                      child: Image.asset(imagePath),
+                      child: Image.asset(alertData.resourcePath),
                     )
                   ],
                 ),
@@ -63,7 +60,7 @@ class AlertCard extends StatelessWidget {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        alertType,
+                                        alertData.alertTitle,
                                         style: TextStyle(
                                           color: Colors.grey[700],
                                           fontFamily: 'Nutmeg',
@@ -91,7 +88,7 @@ class AlertCard extends StatelessWidget {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        alertDescription,
+                                        alertData.alertText,
                                         style: TextStyle(
                                           color: Colors.grey[700],
                                           fontFamily: 'Nutmeg',

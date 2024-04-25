@@ -1,9 +1,11 @@
+import 'package:boton_ceti/data/alerts_data.dart';
 import 'package:boton_ceti/global/global_vars.dart';
+import 'package:boton_ceti/models/alert_builder.dart';
 import 'package:flutter/material.dart';
 
 class AlertDataBottomSheet extends StatefulWidget {
-  final Widget child;
-  const AlertDataBottomSheet({super.key, required this.child});
+  final AlertData alertData;
+  const AlertDataBottomSheet({super.key, required this.alertData});
 
   @override
   State<AlertDataBottomSheet> createState() => _AlertDataBottomSheetState();
@@ -12,6 +14,7 @@ class AlertDataBottomSheet extends StatefulWidget {
 class _AlertDataBottomSheetState extends State<AlertDataBottomSheet> {
   final sheet = GlobalKey();
   final controller = DraggableScrollableController();
+  final _controller = DraggableScrollableController();
 
   @override
   void initState() {
@@ -37,13 +40,52 @@ class _AlertDataBottomSheetState extends State<AlertDataBottomSheet> {
   DraggableScrollableSheet get getSheet =>
       (sheet.currentWidget as DraggableScrollableSheet);
 
+  void endAlert() async {
+    await _controller.animateTo(
+      getSheet.minChildSize,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+    Future.microtask(
+      () async => await showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(10.0),
+            ),
+          ),
+          content: Builder(
+            builder: (context) {
+              var width = MediaQuery.of(context).size.width;
+              return SizedBox(
+                height: null,
+                width: width,
+                child: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Alerta recibida con éxito'),
+                    Text('Alerta recibida con éxito'),
+                    Text('Alerta recibida con éxito'),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         return DraggableScrollableSheet(
+          controller: _controller,
           key: sheet,
-          initialChildSize: 0.1,
+          initialChildSize: 0.18,
           maxChildSize: 0.5,
           minChildSize: 0.1,
           expand: true,
@@ -80,7 +122,10 @@ class _AlertDataBottomSheetState extends State<AlertDataBottomSheet> {
                         child: SizedBox(
                           height: MediaQuery.of(context).size.height * 0.45,
                           width: double.infinity,
-                          child: widget.child,
+                          child: AlertBuilder(
+                            alertData: widget.alertData,
+                            callback: endAlert,
+                          ),
                         ),
                       ),
                     ],
@@ -110,7 +155,7 @@ class _AlertDataBottomSheetState extends State<AlertDataBottomSheet> {
                   decoration: BoxDecoration(
                     color: VariablesGlobales.coloresApp[3],
                     shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.all(
+                    borderRadius: const BorderRadius.all(
                       Radius.circular(8.0),
                     ),
                   ),

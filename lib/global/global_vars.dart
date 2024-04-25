@@ -1,3 +1,4 @@
+import 'package:boton_ceti/data/alerts_data.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as map_tool;
@@ -55,5 +56,28 @@ class VariablesGlobales {
     map_tool.LatLng(20.628972715994287, -103.25059958562193),
     map_tool.LatLng(20.629114715966278, -103.25120650021393),
     map_tool.LatLng(20.62975016421788, -103.25176410299532)
+  ];
+
+  static List<AlertData> alertsData = [
+    AlertData(
+      alertTitle: 'SEGURIDAD',
+      alertText: 'Viví o presencié un incidente de seguridad.',
+      resourcePath: 'assets/icons/seguridad.png',
+    ),
+    AlertData(
+      alertTitle: 'MÉDICO',
+      alertText: 'Sufrí un accidente médico.',
+      resourcePath: 'assets/icons/medico.png',
+    ),
+    AlertData(
+      alertTitle: 'ACOSO',
+      alertText: 'Sufrí o presencié acoso o bullying',
+      resourcePath: 'assets/icons/acoso.jpg',
+    ),
+    AlertData(
+      alertTitle: 'INCENDIO',
+      alertText: 'Hay un incendio en el plantel.',
+      resourcePath: 'assets/icons/incendio.png',
+    ),
   ];
 }

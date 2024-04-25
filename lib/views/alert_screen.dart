@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:boton_ceti/animations/page_animation.dart';
+import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/models/alert_card.dart';
 import 'package:boton_ceti/views/map_screen.dart';
 import 'package:flutter/material.dart';
@@ -130,52 +131,35 @@ class _AlertScreenState extends State<AlertScreen> {
                           child: SingleChildScrollView(
                             physics: const BouncingScrollPhysics(),
                             child: Column(
-                              children: [
-                                GestureDetector(
-                                  onTap: () => Future.microtask(() {
-                                    Navigator.of(context).push(
-                                      crearRutaNamed(
-                                          const MapScreen(), 'alertRunning'),
-                                    );
-                                  }),
-                                  child: AlertCard(
-                                    alertType: 'SEGURIDAD',
-                                    alertIcon: Icons.copy,
-                                    containerHeight: constraints.maxHeight,
-                                    alertDescription:
-                                        'Viví o presencié un incidente de seguridad.',
-                                    imagePath: 'assets/icons/seguridad.png',
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                AlertCard(
-                                  alertType: 'MÉDICO',
-                                  alertIcon: Icons.copy,
-                                  containerHeight: constraints.maxHeight,
-                                  alertDescription:
-                                      'Sufrí un accidente médico.',
-                                  imagePath: 'assets/icons/medico.png',
-                                ),
-                                const SizedBox(height: 10),
-                                AlertCard(
-                                  alertType: 'ACOSO',
-                                  alertIcon: Icons.copy,
-                                  containerHeight: constraints.maxHeight,
-                                  alertDescription:
-                                      'Sufrí o presencié acoso o bullying',
-                                  imagePath: 'assets/icons/acoso.jpg',
-                                ),
-                                const SizedBox(height: 10),
-                                AlertCard(
-                                  alertType: 'INCENDIO',
-                                  alertIcon: Icons.copy,
-                                  containerHeight: constraints.maxHeight,
-                                  alertDescription:
-                                      'Hay un incendio en el plantel.',
-                                  imagePath: 'assets/icons/incendio.png',
-                                ),
-                                const SizedBox(height: 80),
-                              ],
+                              children: VariablesGlobales.alertsData
+                                  .map(
+                                    (e) => Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () => Future.microtask(
+                                            () => Navigator.of(context).push(
+                                              crearRutaNamed(
+                                                MapScreen(
+                                                  alertData: e,
+                                                ),
+                                                'alertRunning',
+                                              ),
+                                            ),
+                                          ),
+                                          child: AlertCard(
+                                            alertIcon: Icons.copy,
+                                            containerHeight:
+                                                constraints.maxHeight,
+                                            alertData: e,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                  .toList(),
                             ),
                           ),
                         );

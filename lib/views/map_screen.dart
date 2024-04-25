@@ -1,19 +1,25 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:ui' as ui;
 
 import 'package:boton_ceti/animations/page_animation.dart';
+import 'package:boton_ceti/data/alerts_data.dart';
 import 'package:boton_ceti/global/global_vars.dart';
-import 'package:boton_ceti/models/alert_builder.dart';
 import 'package:boton_ceti/models/alert_data.dart';
 import 'package:boton_ceti/views/no_location.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as map_tool;
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({super.key});
+  final AlertData alertData;
+  const MapScreen({
+    super.key,
+    required this.alertData,
+  });
 
   @override
   MapScreenState createState() => MapScreenState();
@@ -28,6 +34,8 @@ class MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
   late bool _positionFetched = false;
   late bool _locationPermission = false;
   late bool _withinBounds = false;
+  late BitmapDescriptor customIcon;
+  final Map<String, Marker> _markers = {};
 
   @override
   void initState() {
@@ -56,6 +64,24 @@ class MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     print(state);
+  }
+
+  _generateMarkers() async {
+    BitmapDescriptor markerIcon = BitmapDescriptor.fromBytes(
+      await getBytesFromAsset(
+        widget.alertData.resourcePath,
+        (MediaQuery.of(context).size.width * 0.4).round(),
+      ),
+    );
+    _markers['0'] = Marker(
+      icon: markerIcon,
+      markerId: MarkerId(widget.alertData.alertText),
+      position: LatLng(
+        _currentPosition.latitude,
+        _currentPosition.longitude,
+      ),
+    );
+    setState(() {});
   }
 
   Future<void> changePermissionStatus() async {
@@ -193,49 +219,67 @@ class MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
           ),
         ),
       );
+      _generateMarkers();
     } else {
       await _positionCompleter.future;
       _onMapCreated(controller);
     }
   }
 
+  static Future<Uint8List> getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          GoogleMap(
-            mapType: MapType.normal,
-            myLocationEnabled: _locationPermission,
-            compassEnabled: true,
-            buildingsEnabled: true,
-            rotateGesturesEnabled: true,
-            scrollGesturesEnabled: true,
-            zoomControlsEnabled: false,
-            zoomGesturesEnabled: false,
-            myLocationButtonEnabled: false,
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: CameraPosition(
-              target: _center,
-              zoom: 11.0,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        body: Stack(
+          children: [
+            GoogleMap(
+              mapType: MapType.normal,
+              myLocationEnabled: _locationPermission,
+              compassEnabled: true,
+              buildingsEnabled: true,
+              rotateGesturesEnabled: true,
+              scrollGesturesEnabled: true,
+              zoomControlsEnabled: false,
+              zoomGesturesEnabled: false,
+              myLocationButtonEnabled: false,
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: CameraPosition(
+                target: _center,
+                zoom: 11.0,
+              ),
+              polygons: _polygon,
+              markers: _markers.values.toSet(),
             ),
-            polygons: _polygon,
-          ),
-          const AlertDataBottomSheet(
-            child: AlertBuilder(
-              alertText: 'Una alarma de acoso está siendo emitida.',
-              alertTitle: 'Acoso',
-              assetPath: 'assets/icons/acoso.jpg',
+            AlertDataBottomSheet(
+              alertData: widget.alertData,
             ),
-          ),
-          // if (_positionFetched && !_withinBounds) ...[
-          //   Align(
-          //     alignment: Alignment.bottomCenter,
-          //     child: notInBounds(),
-          //   ),
-          // ]
-        ],
+            // if (_positionFetched && !_withinBounds) ...[
+            //   Align(
+            //     alignment: Alignment.bottomCenter,
+            //     child: notInBounds(),
+            //   ),
+            // ]
+          ],
+        ),
       ),
+    );
+  }
+
+  void endAlertCallback() {
+    showDialog(
+      context: context,
+      builder: (context) => const AlertDialog(),
     );
   }
 }
