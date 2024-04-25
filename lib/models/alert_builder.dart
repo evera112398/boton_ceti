@@ -59,26 +59,13 @@ class _AlertBuilderState extends State<AlertBuilder> {
             Expanded(
               flex: 3,
               child: Container(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 150,
-                      width: 150,
-                      child: Stack(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(15),
-                            child: Image.asset(widget.assetPath),
-                          ),
-                          Lottie.asset(
-                            'assets/lotties/ripple_effect.json',
-                          )
-                        ],
-                      ),
-                    )
-                  ],
+                color: Colors.purple,
+                child: Lottie.asset(
+                  'assets/lotties/alert.json',
+                  fit: BoxFit.cover,
+                  animate: true,
+                  repeat: true,
+                  frameRate: FrameRate(60),
                 ),
               ),
             ),
