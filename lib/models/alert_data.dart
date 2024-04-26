@@ -1,6 +1,9 @@
+import 'package:boton_ceti/animations/page_animation.dart';
 import 'package:boton_ceti/data/alerts_data.dart';
 import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/models/alert_builder.dart';
+import 'package:boton_ceti/models/alert_end_body.dart';
+import 'package:boton_ceti/views/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class AlertDataBottomSheet extends StatefulWidget {
@@ -49,29 +52,123 @@ class _AlertDataBottomSheetState extends State<AlertDataBottomSheet> {
     Future.microtask(
       () async => await showDialog(
         context: context,
-        builder: (_) => AlertDialog(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(10.0),
+        barrierDismissible: false,
+        builder: (_) => WillPopScope(
+          onWillPop: () async => false,
+          child: AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            insetPadding: const EdgeInsets.symmetric(horizontal: 10),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(10.0),
+              ),
             ),
-          ),
-          content: Builder(
-            builder: (context) {
-              var width = MediaQuery.of(context).size.width;
-              return SizedBox(
-                height: null,
-                width: width,
-                child: const Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Alerta recibida con éxito'),
-                    Text('Alerta recibida con éxito'),
-                    Text('Alerta recibida con éxito'),
-                  ],
-                ),
-              );
-            },
+            content: Builder(
+              builder: (context) {
+                var width = MediaQuery.of(context).size.width;
+                var height = MediaQuery.of(context).size.height;
+                return Container(
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                  height: height * 0.6,
+                  width: width,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return Column(
+                        children: [
+                          SizedBox(
+                            height: constraints.maxHeight * 0.25,
+                            width: double.infinity,
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        margin: const EdgeInsets.all(10),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                        ),
+                                        child: const FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            'Tipo de alarma:',
+                                            style: TextStyle(
+                                              fontFamily: 'Nutmeg',
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(5),
+                                        margin:
+                                            const EdgeInsets.only(bottom: 5),
+                                        child: Image.asset(
+                                          widget.alertData.resourcePath,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          const Expanded(
+                            child: AlertEndBody(),
+                          ),
+                          Container(
+                            height: null,
+                            width: double.infinity,
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      await Future.delayed(
+                                        const Duration(milliseconds: 300),
+                                      );
+                                      Future.microtask(
+                                        () => Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                          crearRutaNamed(
+                                              const HomeScreen(), 'homeScreen'),
+                                          (route) => false,
+                                        ),
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          VariablesGlobales.coloresApp[1],
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                    ),
+                                    child: const Text('Aceptar'),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),
