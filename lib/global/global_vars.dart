@@ -34,6 +34,12 @@ class VariablesGlobales {
     'Rio Santiago',
   ];
 
+  static Map<String, LatLng> buildingsLatLng = {
+    'Colomos': const LatLng(20.703112331160806, -103.38930647712071),
+    'Tonalá': const LatLng(20.63034025885584, -103.25100687369152),
+    'Rio Santiago': const LatLng(20.66118337929871, -103.19352846632137),
+  };
+
   static List<LatLng> coordinatesTonala = [
     const LatLng(20.630172611583806, -103.251650306506),
     const LatLng(20.63071220651828, -103.25157823539821),

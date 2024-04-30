@@ -41,7 +41,11 @@ class _HomeScreenState extends State<HomeScreen> {
           PageView(
             controller: _pageController,
             physics: const NeverScrollableScrollPhysics(),
-            children: const [Map(), AlertScreen(), ProfileScreen()],
+            children: const [
+              Map(),
+              AlertScreen(),
+              ProfileScreen(),
+            ],
           ),
           BNavigationBar(
             nbController: _nbController,
