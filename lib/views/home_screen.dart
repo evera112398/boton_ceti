@@ -47,10 +47,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ProfileScreen(),
             ],
           ),
-          BNavigationBar(
-            nbController: _nbController,
-            selectedIndex: _currentPageIndex,
-            callback: (pageIndex) => changePage(pageIndex),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: BNavigationBar(
+              nbController: _nbController,
+              selectedIndex: _currentPageIndex,
+              callback: (pageIndex) => changePage(pageIndex),
+            ),
           ),
         ],
       ),

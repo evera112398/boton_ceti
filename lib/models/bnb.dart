@@ -23,20 +23,27 @@ class _BNavigationBarState extends State<BNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedNotchBottomBar(
-      color: VariablesGlobales.coloresApp[1],
-      durationInMilliSeconds: 100,
-      notchBottomBarController: widget.nbController,
-      bottomBarItems: navIcons.map((icon) {
-        return BottomBarItem(
-          inActiveItem: Icon(
-            icon,
-            color: Colors.white,
-          ),
-          activeItem: Icon(icon, color: VariablesGlobales.coloresApp[1]),
-        );
-      }).toList(),
-      onTap: (value) => widget.callback(value),
+    double height = MediaQuery.of(context).size.height;
+    return Container(
+      constraints: const BoxConstraints(
+        minHeight: 100,
+      ),
+      height: height * 0.1,
+      child: AnimatedNotchBottomBar(
+        color: VariablesGlobales.coloresApp[1],
+        durationInMilliSeconds: 100,
+        notchBottomBarController: widget.nbController,
+        bottomBarItems: navIcons.map((icon) {
+          return BottomBarItem(
+            inActiveItem: Icon(
+              icon,
+              color: Colors.white,
+            ),
+            activeItem: Icon(icon, color: VariablesGlobales.coloresApp[1]),
+          );
+        }).toList(),
+        onTap: (value) => widget.callback(value),
+      ),
     );
   }
 }
