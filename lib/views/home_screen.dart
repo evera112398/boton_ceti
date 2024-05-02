@@ -36,26 +36,28 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: VariablesGlobales.bgColor,
-      body: Stack(
-        children: [
-          PageView(
-            controller: _pageController,
-            physics: const NeverScrollableScrollPhysics(),
-            children: const [
-              Map(),
-              AlertScreen(),
-              ProfileScreen(),
-            ],
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: BNavigationBar(
-              nbController: _nbController,
-              selectedIndex: _currentPageIndex,
-              callback: (pageIndex) => changePage(pageIndex),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            PageView(
+              controller: _pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              children: const [
+                Map(),
+                AlertScreen(),
+                ProfileScreen(),
+              ],
             ),
-          ),
-        ],
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: BNavigationBar(
+                nbController: _nbController,
+                selectedIndex: _currentPageIndex,
+                callback: (pageIndex) => changePage(pageIndex),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

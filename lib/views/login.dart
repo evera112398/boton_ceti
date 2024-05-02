@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:boton_ceti/animations/page_animation.dart';
 import 'package:boton_ceti/views/home_screen.dart';
 import 'package:boton_ceti/global/global_vars.dart';
+import 'package:boton_ceti/views/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -290,7 +291,14 @@ class _LogincreenState extends State<Logincreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     GestureDetector(
-                                      onTap: () {},
+                                      onTap: () => Future.microtask(
+                                        () => Navigator.of(context).push(
+                                          crearRutaNamed(
+                                            const RegisterScreen(),
+                                            'registerScreen',
+                                          ),
+                                        ),
+                                      ),
                                       child: Text(
                                         'Registrarme',
                                         style: TextStyle(
