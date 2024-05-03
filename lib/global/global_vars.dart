@@ -34,6 +34,15 @@ class VariablesGlobales {
     'Rio Santiago',
   ];
 
+  static List<RegExp> expresionesRegulares = [
+    RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$'),
+    RegExp("^[0-9]{10}\$"),
+    RegExp(r'\d+'),
+    RegExp(r'[A-Z]+'),
+    RegExp(r'[a-z]+'),
+    RegExp(r'[\W_]+')
+  ];
+
   static Map<String, LatLng> buildingsLatLng = {
     planteles[0]: const LatLng(20.703112331160806, -103.38930647712071),
     planteles[1]: const LatLng(20.63034025885584, -103.25100687369152),

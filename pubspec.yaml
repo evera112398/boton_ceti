@@ -43,6 +43,7 @@ dependencies:
   permission_handler: ^11.0.1
   maps_toolkit: ^3.0.0
   xml: ^6.3.0
+  email_validator: ^2.1.17
 
 dev_dependencies:
   flutter_test:
