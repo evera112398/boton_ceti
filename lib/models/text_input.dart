@@ -7,10 +7,13 @@ class TextInput extends StatefulWidget {
   final List<String> autofillHints;
   final String? Function(String?)? validator;
   final void Function(String?)? onChanged;
+  final void Function()? onTap;
   final TextInputType? keyboardType;
   final String hintText;
   final IconData icon;
   final bool isPassword;
+  final FocusNode focusNode;
+  final int? maxCharacters;
   const TextInput({
     super.key,
     required this.controller,
@@ -21,6 +24,9 @@ class TextInput extends StatefulWidget {
     this.keyboardType,
     this.isPassword = false,
     this.onChanged,
+    this.onTap,
+    required this.focusNode,
+    this.maxCharacters,
   });
 
   @override
@@ -30,27 +36,37 @@ class TextInput extends StatefulWidget {
 class _TextInputState extends State<TextInput> {
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      cursorColor: VariablesGlobales.coloresApp[1],
-      controller: widget.controller,
-      inputFormatters: [
-        NoEmojiFormatter(),
-      ],
-      enableInteractiveSelection: false,
-      // focusNode: focusDatosPersonales[0],
-      onChanged: widget.onChanged,
-      obscureText: widget.isPassword ? true : false,
-      validator: widget.validator,
-      autofillHints: widget.autofillHints,
-      textCapitalization: TextCapitalization.words,
-      keyboardType: widget.keyboardType ?? TextInputType.text,
-      decoration: InputDecoration(
-        hintText: widget.hintText,
-        prefixIcon: Icon(widget.icon),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+    return Theme(
+      data: Theme.of(context).copyWith(
+        colorScheme: ThemeData().colorScheme.copyWith(
+              primary: VariablesGlobales.coloresApp[1],
+            ),
+      ),
+      child: TextFormField(
+        maxLength: widget.maxCharacters,
+        maxLengthEnforcement: MaxLengthEnforcement.enforced,
+        onTap: widget.onTap,
+        cursorColor: VariablesGlobales.coloresApp[1],
+        controller: widget.controller,
+        inputFormatters: [
+          NoEmojiFormatter(),
+        ],
+        enableInteractiveSelection: false,
+        focusNode: widget.focusNode,
+        onChanged: widget.onChanged,
+        obscureText: widget.isPassword ? true : false,
+        validator: widget.validator,
+        autofillHints: widget.autofillHints,
+        textCapitalization: TextCapitalization.words,
+        keyboardType: widget.keyboardType ?? TextInputType.text,
+        decoration: InputDecoration(
+          hintText: widget.hintText,
+          prefixIcon: Icon(widget.icon),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          labelText: widget.hintText,
         ),
-        labelText: widget.hintText,
       ),
     );
   }

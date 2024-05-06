@@ -43,6 +43,11 @@ class VariablesGlobales {
     RegExp(r'[\W_]+')
   ];
 
+  static List<String> emailAddressPool = [
+    'ceti.mx',
+    'live.ceti.mx',
+  ];
+
   static Map<String, LatLng> buildingsLatLng = {
     planteles[0]: const LatLng(20.703112331160806, -103.38930647712071),
     planteles[1]: const LatLng(20.63034025885584, -103.25100687369152),

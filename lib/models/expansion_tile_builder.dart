@@ -7,12 +7,14 @@ class ExpansionTileBuilder extends StatefulWidget {
   final bool initiallyExpanded;
   final String expansionTitle;
   final ExpansionTileController controller;
+  final bool iconStatus;
   const ExpansionTileBuilder({
     super.key,
     required this.children,
     required this.initiallyExpanded,
     required this.expansionTitle,
     required this.controller,
+    required this.iconStatus,
   });
 
   @override
@@ -56,8 +58,8 @@ class _ExpansionTileBuilderState extends State<ExpansionTileBuilder> {
             const SizedBox(height: 25),
             Row(
               children: [
-                const IconBuilder(
-                  status: false,
+                IconBuilder(
+                  status: widget.iconStatus,
                 ),
                 Expanded(
                   child: Container(
