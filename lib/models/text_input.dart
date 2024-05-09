@@ -8,6 +8,7 @@ class TextInput extends StatefulWidget {
   final String? Function(String?)? validator;
   final void Function(String?)? onChanged;
   final void Function()? onTap;
+  final void Function(String?)? onFieldSubmited;
   final TextInputType? keyboardType;
   final String hintText;
   final IconData icon;
@@ -27,6 +28,7 @@ class TextInput extends StatefulWidget {
     this.onTap,
     required this.focusNode,
     this.maxCharacters,
+    this.onFieldSubmited,
   });
 
   @override
@@ -67,6 +69,7 @@ class _TextInputState extends State<TextInput> {
           ),
           labelText: widget.hintText,
         ),
+        onFieldSubmitted: widget.onFieldSubmited,
       ),
     );
   }

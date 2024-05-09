@@ -1,7 +1,7 @@
-import 'dart:ui';
-
 import 'package:boton_ceti/animations/page_animation.dart';
 import 'package:boton_ceti/global/global_vars.dart';
+import 'package:boton_ceti/models/adaptative_button.dart';
+import 'package:boton_ceti/models/app_banner.dart';
 import 'package:boton_ceti/models/expansion_tile_builder.dart';
 import 'package:boton_ceti/models/password_conditions.dart';
 import 'package:boton_ceti/models/text_input.dart';
@@ -24,6 +24,8 @@ class _RegisterScreenState extends State<RegisterScreen>
   late AnimationController _controllerCopy;
   late Animation<double> agrandar;
   late Animation<double> _agrandarCopy;
+
+  final ScrollController _registerScrollController = ScrollController();
 
   List<GlobalKey<FormState>> registerFormKeys = [
     GlobalKey<FormState>(),
@@ -61,6 +63,13 @@ class _RegisterScreenState extends State<RegisterScreen>
     FocusNode(),
   ];
 
+  final List<StepState> _states = [
+    StepState.editing,
+    StepState.disabled,
+    StepState.disabled,
+    StepState.disabled,
+  ];
+
   final FocusNode emailFocusNode = FocusNode();
 
   final FocusNode cellphoneFocusNode = FocusNode();
@@ -80,15 +89,13 @@ class _RegisterScreenState extends State<RegisterScreen>
   bool _cellphoneValidateButtonEnabled = false;
   bool showFirstPasswordRequirement = false;
   bool showSecondPasswordRequirement = false;
-  List<bool> expansionTileStatus = [
-    false,
-    false,
-    false,
-    false,
-  ];
 
   String emailRegexPool = '';
   late RegExp emailRegex;
+  final List<String> buttonTexts = [
+    'Validar',
+    'Siguiente',
+  ];
 
   void buildEmailRegexPattern() {
     String patterns = VariablesGlobales.emailAddressPool.join('|');
@@ -98,15 +105,15 @@ class _RegisterScreenState extends State<RegisterScreen>
   }
 
   void validatePersonalData(String data) {
-    expansionTileStatus[0] = false;
+    _states[0] = StepState.error;
     if (registerFormKeys[0].currentState!.validate()) {
-      expansionTileStatus[0] = true;
+      _states[0] = StepState.complete;
     }
     setState(() {});
   }
 
   void validateEmail(String data) {
-    expansionTileStatus[1] = false;
+    _states[1] = StepState.error;
     _emailValidateButtonEnabled = false;
     if (registerFormKeys[1].currentState!.validate()) {
       _emailValidateButtonEnabled = true;
@@ -115,7 +122,7 @@ class _RegisterScreenState extends State<RegisterScreen>
   }
 
   void validateCellphone(String data) {
-    expansionTileStatus[2] = false;
+    _states[2] = StepState.error;
     _cellphoneValidateButtonEnabled = false;
     if (registerFormKeys[2].currentState!.validate()) {
       _cellphoneValidateButtonEnabled = true;
@@ -124,7 +131,7 @@ class _RegisterScreenState extends State<RegisterScreen>
   }
 
   void _checkPassword(String password) {
-    expansionTileStatus[3] = false;
+    _states[3] = StepState.error;
     _hasNumber = false;
     _is8Characters = false;
     _hasMayus = false;
@@ -154,13 +161,13 @@ class _RegisterScreenState extends State<RegisterScreen>
     }
     setState(() {});
     if (registerFormKeys[3].currentState!.validate()) {
-      expansionTileStatus[3] = true;
+      _states[3] = StepState.complete;
       setState(() {});
     }
   }
 
   void _checkSecondPassword(String password) {
-    expansionTileStatus[3] = false;
+    _states[3] = StepState.error;
     _passwordsMatch = false;
     if (passwordController[1].text.isNotEmpty) {
       if (passwordController[1].value == passwordController[0].value) {
@@ -169,7 +176,7 @@ class _RegisterScreenState extends State<RegisterScreen>
     }
     setState(() {});
     if (registerFormKeys[3].currentState!.validate()) {
-      expansionTileStatus[3] = true;
+      _states[3] = StepState.complete;
       setState(() {});
     }
   }
@@ -293,6 +300,48 @@ class _RegisterScreenState extends State<RegisterScreen>
     );
   }
 
+  //!Esta función es la que evalúa que texto debe tener el botón mostrado en cada una de las cards del registro.
+  String setAdaptativeButtonText(int step) {
+    if (_states[step] == StepState.complete) {
+      return buttonTexts[1];
+    }
+    return buttonTexts[0];
+  }
+
+//!Esta función se encarga de darle la funcionabilidad al botón.
+  void setAdaptativeButtonFunction(int step) {
+    if (step == 1 &&
+        (_states[step] == StepState.editing ||
+            _states[step] == StepState.error)) {
+      _states[step] = StepState
+          .complete; //! Aquí se llama a la API para validar el correo electrónico.
+      setState(() {});
+      return;
+    }
+
+    if (step == 2 &&
+        (_states[step] == StepState.editing ||
+            _states[step] == StepState.error)) {
+      _states[step] = StepState
+          .complete; //! Aquí se llama a la API para validar el número de celular.
+      setState(() {});
+      return;
+    }
+    int currentExpansionTile = step;
+    int nextExpansionTile = step + 1;
+    expansionTileControllers[currentExpansionTile].collapse();
+    if (step < 3) {
+      expansionTileControllers[nextExpansionTile].expand();
+      _states[nextExpansionTile] = StepState.editing;
+    }
+    setState(() {});
+  }
+
+  void switchFocusNode(FocusNode oldFocusNode, FocusNode newFocusNode) {
+    oldFocusNode.unfocus();
+    newFocusNode.requestFocus();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -300,10 +349,16 @@ class _RegisterScreenState extends State<RegisterScreen>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1000),
-    )..addListener(() {
+    )..addListener(() async {
         if (_controller.status == AnimationStatus.dismissed) {
           showFirstPasswordRequirement = false;
           setState(() {});
+        }
+        if (_controller.status == AnimationStatus.completed) {
+          _registerScrollController.animateTo(
+              _registerScrollController.position.maxScrollExtent * 1.2,
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.easeInOut);
         }
       });
     agrandar = Tween(begin: 0.0, end: 1.0).animate(
@@ -316,6 +371,12 @@ class _RegisterScreenState extends State<RegisterScreen>
         if (_controllerCopy.status == AnimationStatus.dismissed) {
           showSecondPasswordRequirement = false;
           setState(() {});
+        }
+        if (_controllerCopy.status == AnimationStatus.completed) {
+          _registerScrollController.animateTo(
+              _registerScrollController.position.maxScrollExtent * 1.2,
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.easeInOut);
         }
       });
     _agrandarCopy = Tween(begin: 0.0, end: 1.0).animate(
@@ -332,6 +393,11 @@ class _RegisterScreenState extends State<RegisterScreen>
           _controllerCopy.status == AnimationStatus.completed) {
         _controllerCopy.reverse();
       }
+      if (passwordFocusNodes[1].hasFocus) {
+        showSecondPasswordRequirement = true;
+        _controllerCopy.forward();
+        setState(() {});
+      }
     });
   }
 
@@ -344,238 +410,193 @@ class _RegisterScreenState extends State<RegisterScreen>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScopeNode currentFocus = FocusScope.of(context);
-        if (!currentFocus.hasPrimaryFocus) {
-          WidgetsBinding.instance
-              .addPostFrameCallback((_) => currentFocus.unfocus());
-        }
-      },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(
+    double remainingHeight =
+        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
+    return Scaffold(
+      backgroundColor: VariablesGlobales.bgColor,
+      body: SafeArea(
+        child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            width: double.infinity,
-            child: Column(
-              children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.18,
-                  width: double.infinity,
-                  child: Stack(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 3),
-                        height: null,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              offset: const Offset(0, 3),
-                              blurRadius: 1,
-                              spreadRadius: 2,
-                              color: Colors.black.withOpacity(0.4),
-                            )
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20)),
-                          child: Image.asset(
-                            'assets/images/plantel_colomos.webp',
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Positioned.fill(
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 1.1, sigmaY: 1.1),
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(20),
-                                  bottomRight: Radius.circular(20)),
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color.fromRGBO(0, 104, 178, 0.85),
-                                  Color.fromRGBO(0, 104, 178, 0.85),
-                                  Color.fromRGBO(58, 1, 102, 0.65)
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          double squareSize = constraints.maxWidth * 0.15;
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                height: squareSize,
-                                width: squareSize,
-                                child: Image.asset(
-                                  'assets/images/ceti blanco.png',
-                                ),
-                              ),
-                              const SizedBox(height: 15),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: constraints.maxWidth * 0.8,
-                                    child: const FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        'Registro de alumnos',
-                                        style: TextStyle(
-                                          fontFamily: 'Nutmeg',
-                                          color: Colors.white,
-                                          fontSize: 24,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          );
-                        },
-                      ),
-                    ],
+          child: GestureDetector(
+            onTap: () {
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus) {
+                WidgetsBinding.instance
+                    .addPostFrameCallback((_) => currentFocus.unfocus());
+              }
+            },
+            child: SizedBox(
+              height: remainingHeight,
+              width: double.infinity,
+              child: Column(
+                children: [
+                  const Expanded(
+                    flex: 1,
+                    child: AppBanner(),
                   ),
-                ),
-                Expanded(
-                  flex: 4,
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 20),
-                    padding: const EdgeInsets.only(top: 20),
+                  Expanded(
+                    flex: 4,
                     child: SingleChildScrollView(
+                      controller: _registerScrollController,
                       physics: const BouncingScrollPhysics(),
                       child: Column(
                         // mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Form(
                             key: registerFormKeys[0],
-                            child: ExpansionTileBuilder(
-                              iconStatus: expansionTileStatus[0],
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                top: 10,
+                              ),
                               //!ExpansionTile para Datos Personales.
-                              expansionTitle: 'Datos personales',
-                              initiallyExpanded: true,
-                              controller: expansionTileControllers[0],
-                              children: [
-                                Container(
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 5),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: TextInput(
-                                    focusNode: personalDataFocusNodes[0],
-                                    controller: personalDataControllers[0],
-                                    autofillHints: const [AutofillHints.name],
-                                    hintText: 'Nombre:',
-                                    icon: Icons.person_outline_outlined,
-                                    validator: (value) {
-                                      if (value!.isEmpty ||
-                                          !VariablesGlobales
-                                              .expresionesRegulares[0]
-                                              .hasMatch(value)) {
-                                        expansionTileControllers[0].expand();
-                                        return "Ingresa un nombre válido";
-                                      }
-                                      return null;
-                                    },
-                                    onChanged: (data) =>
-                                        validatePersonalData(data!),
-                                    onTap: () {
-                                      personalDataFocusNodes[0].requestFocus();
-
-                                      setState(() {});
-                                    },
+                              child: ExpansionTileBuilder(
+                                isExpandable: _states[0] != StepState.disabled
+                                    ? true
+                                    : false,
+                                iconStatus: _states[0],
+                                expansionTitle: 'Datos personales',
+                                initiallyExpanded: true,
+                                controller: expansionTileControllers[0],
+                                children: [
+                                  Container(
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 5),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: TextInput(
+                                      focusNode: personalDataFocusNodes[0],
+                                      controller: personalDataControllers[0],
+                                      autofillHints: const [AutofillHints.name],
+                                      hintText: 'Nombre:',
+                                      icon: Icons.person_outline_outlined,
+                                      validator: (value) {
+                                        if (value!.isEmpty ||
+                                            !VariablesGlobales
+                                                .expresionesRegulares[0]
+                                                .hasMatch(value)) {
+                                          expansionTileControllers[0].expand();
+                                          return "Ingresa un nombre válido";
+                                        }
+                                        return null;
+                                      },
+                                      onChanged: (data) =>
+                                          validatePersonalData(data!),
+                                      onTap: () {
+                                        personalDataFocusNodes[0]
+                                            .requestFocus();
+                                        setState(() {});
+                                      },
+                                      onFieldSubmited: (value) =>
+                                          switchFocusNode(
+                                        personalDataFocusNodes[0],
+                                        personalDataFocusNodes[1],
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 5),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: TextInput(
-                                    focusNode: personalDataFocusNodes[1],
-                                    controller: personalDataControllers[1],
-                                    autofillHints: const [
-                                      AutofillHints.familyName
+                                  Container(
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 5),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: TextInput(
+                                      focusNode: personalDataFocusNodes[1],
+                                      controller: personalDataControllers[1],
+                                      autofillHints: const [
+                                        AutofillHints.familyName
+                                      ],
+                                      hintText: 'Apellido paterno:',
+                                      icon: Icons.person_outline_outlined,
+                                      validator: (value) {
+                                        if (value!.isEmpty ||
+                                            !VariablesGlobales
+                                                .expresionesRegulares[0]
+                                                .hasMatch(value)) {
+                                          expansionTileControllers[0].expand();
+                                          return "Ingresa un apellido válido";
+                                        }
+                                        return null;
+                                      },
+                                      onChanged: (data) =>
+                                          validatePersonalData(data!),
+                                      onTap: () {
+                                        personalDataFocusNodes[1]
+                                            .requestFocus();
+                                        setState(() {});
+                                      },
+                                      onFieldSubmited: (value) =>
+                                          switchFocusNode(
+                                        personalDataFocusNodes[1],
+                                        personalDataFocusNodes[2],
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 5),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: TextInput(
+                                      focusNode: personalDataFocusNodes[2],
+                                      controller: personalDataControllers[2],
+                                      autofillHints: const [
+                                        AutofillHints.familyName
+                                      ],
+                                      hintText: 'Apellido materno:',
+                                      icon: Icons.person_outline_outlined,
+                                      validator: (value) {
+                                        if (value!.isNotEmpty &&
+                                            !VariablesGlobales
+                                                .expresionesRegulares[0]
+                                                .hasMatch(value)) {
+                                          expansionTileControllers[0].expand();
+                                          return "Ingresa un apellido válido";
+                                        }
+                                        return null;
+                                      },
+                                      onTap: () {
+                                        personalDataFocusNodes[2]
+                                            .requestFocus();
+                                        setState(() {});
+                                      },
+                                      onFieldSubmited: (value) {
+                                        personalDataFocusNodes[2].unfocus();
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                        ),
+                                        child: AdaptativeButton(
+                                          buttonText:
+                                              setAdaptativeButtonText(0),
+                                          onPressed: _states[0] ==
+                                                  StepState.complete
+                                              ? () =>
+                                                  setAdaptativeButtonFunction(0)
+                                              : null,
+                                        ),
+                                      ),
                                     ],
-                                    hintText: 'Apellido paterno:',
-                                    icon: Icons.person_outline_outlined,
-                                    validator: (value) {
-                                      if (value!.isEmpty ||
-                                          !VariablesGlobales
-                                              .expresionesRegulares[0]
-                                              .hasMatch(value)) {
-                                        expansionTileControllers[0].expand();
-                                        return "Ingresa un apellido válido";
-                                      }
-                                      return null;
-                                    },
-                                    onChanged: (data) =>
-                                        validatePersonalData(data!),
-                                    onTap: () {
-                                      personalDataFocusNodes[1].requestFocus();
-
-                                      setState(() {});
-                                    },
                                   ),
-                                ),
-                                Container(
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 5),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: TextInput(
-                                    focusNode: personalDataFocusNodes[2],
-                                    controller: personalDataControllers[2],
-                                    autofillHints: const [
-                                      AutofillHints.familyName
-                                    ],
-                                    hintText: 'Apellido materno:',
-                                    icon: Icons.person_outline_outlined,
-                                    validator: (value) {
-                                      if (value!.isNotEmpty &&
-                                          !VariablesGlobales
-                                              .expresionesRegulares[0]
-                                              .hasMatch(value)) {
-                                        expansionTileControllers[0].expand();
-                                        return "Ingresa un apellido válido";
-                                      }
-                                      return null;
-                                    },
-                                    onTap: () {
-                                      personalDataFocusNodes[2].requestFocus();
-
-                                      setState(() {});
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(height: 5)
-                              ],
+                                  const SizedBox(height: 5)
+                                ],
+                              ),
                             ),
                           ),
                           const SizedBox(height: 20),
                           Form(
                             key: registerFormKeys[1],
+                            //!ExpansionTile para correo electrónico.
                             child: ExpansionTileBuilder(
-                              iconStatus: expansionTileStatus[1],
-                              //!ExpansionTile para correo electrónico.
+                              isExpandable: _states[1] != StepState.disabled
+                                  ? true
+                                  : false,
+                              iconStatus: _states[1],
                               expansionTitle: 'Correo electrónico',
                               initiallyExpanded: false,
                               controller: expansionTileControllers[1],
@@ -619,23 +640,12 @@ class _RegisterScreenState extends State<RegisterScreen>
                                       margin: const EdgeInsets.symmetric(
                                         horizontal: 10,
                                       ),
-                                      child: ElevatedButton(
+                                      child: AdaptativeButton(
+                                        buttonText: setAdaptativeButtonText(1),
                                         onPressed: _emailValidateButtonEnabled
-                                            ? () {
-                                                expansionTileStatus[1] = true;
-                                                setState(() {});
-                                              }
+                                            ? () =>
+                                                setAdaptativeButtonFunction(1)
                                             : null,
-                                        style: ElevatedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              20,
-                                            ),
-                                          ),
-                                          backgroundColor:
-                                              VariablesGlobales.coloresApp[1],
-                                        ),
-                                        child: const Text('Validar'),
                                       ),
                                     ),
                                   ],
@@ -647,9 +657,12 @@ class _RegisterScreenState extends State<RegisterScreen>
                           const SizedBox(height: 20),
                           Form(
                             key: registerFormKeys[2],
+                            //!ExpansionTile para celular.
                             child: ExpansionTileBuilder(
-                              iconStatus: expansionTileStatus[2],
-                              //!ExpansionTile para celular.
+                              isExpandable: _states[2] != StepState.disabled
+                                  ? true
+                                  : false,
+                              iconStatus: _states[2],
                               expansionTitle: 'Número de celular',
                               initiallyExpanded: false,
                               controller: expansionTileControllers[2],
@@ -696,25 +709,15 @@ class _RegisterScreenState extends State<RegisterScreen>
                                       margin: const EdgeInsets.symmetric(
                                         horizontal: 10,
                                       ),
-                                      child: ElevatedButton(
+                                      child: AdaptativeButton(
+                                        buttonText: setAdaptativeButtonText(2),
                                         onPressed:
                                             _cellphoneValidateButtonEnabled
-                                                ? () {
-                                                    expansionTileStatus[2] =
-                                                        true;
-                                                    setState(() {});
-                                                  }
+                                                ? () =>
+                                                    setAdaptativeButtonFunction(
+                                                      2,
+                                                    )
                                                 : null,
-                                        style: ElevatedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              20,
-                                            ),
-                                          ),
-                                          backgroundColor:
-                                              VariablesGlobales.coloresApp[1],
-                                        ),
-                                        child: const Text('Validar'),
                                       ),
                                     ),
                                   ],
@@ -727,9 +730,12 @@ class _RegisterScreenState extends State<RegisterScreen>
 
                           Form(
                             key: registerFormKeys[3],
+                            //!ExpansionTile para contraseña.
                             child: ExpansionTileBuilder(
-                              iconStatus: expansionTileStatus[3],
-                              //!ExpansionTile para contraseña.
+                              isExpandable: _states[3] != StepState.disabled
+                                  ? true
+                                  : false,
+                              iconStatus: _states[3],
                               expansionTitle: 'Contraseña',
                               initiallyExpanded: false,
                               controller: expansionTileControllers[3],
@@ -777,6 +783,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                                       _controller.forward();
                                       setState(() {});
                                     },
+                                    onFieldSubmited: (value) => switchFocusNode(
+                                      passwordFocusNodes[0],
+                                      passwordFocusNodes[1],
+                                    ),
                                   ),
                                 ),
                                 AnimatedContainer(
@@ -922,42 +932,38 @@ class _RegisterScreenState extends State<RegisterScreen>
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                  child: Row(
+                  Row(
                     children: [
                       Expanded(
-                        child: Container(
-                          constraints: BoxConstraints(
-                            minHeight:
-                                MediaQuery.of(context).size.height * 0.04,
-                            maxHeight: 50,
-                          ),
-                          margin: const EdgeInsets.all(8),
-                          child: ElevatedButton(
-                            onPressed: () => registerNewUser(),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: VariablesGlobales.coloresApp[1],
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
+                        child: IntrinsicHeight(
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 10,
                             ),
-                            child: const Text(
-                              'Registrarme',
-                              style: TextStyle(
-                                fontFamily: 'Nutmeg',
+                            child: ElevatedButton(
+                              onPressed: () => registerNewUser(),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    VariablesGlobales.coloresApp[1],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              child: const Text(
+                                'Registrarme',
+                                style: TextStyle(
+                                  fontFamily: 'Nutmeg',
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
                     ],
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
