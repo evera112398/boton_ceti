@@ -1,14 +1,17 @@
 import 'package:boton_ceti/controllers/alertas_controller.dart';
+import 'package:boton_ceti/controllers/controllers_provider.dart';
+import 'package:boton_ceti/controllers/encryption_controller.dart';
+import 'package:boton_ceti/controllers/login_controller.dart';
 import 'package:boton_ceti/views/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  // await dotenv.load(fileName: '.env');
+  await dotenv.load(fileName: '.env');
   runApp(const AppState());
 }
 
@@ -19,9 +22,7 @@ class AppState extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => AlertasController(),
-        ),
+        ChangeNotifierProvider(create: (_) => ControllersProvider.instance),
       ],
       child: const BotonCeti(),
     );

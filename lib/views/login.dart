@@ -1,9 +1,13 @@
 import 'package:boton_ceti/animations/page_animation.dart';
+import 'package:boton_ceti/controllers/controllers_provider.dart';
+import 'package:boton_ceti/controllers/encryption_controller.dart';
+import 'package:boton_ceti/controllers/login_controller.dart';
 import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/models/app_banner.dart';
 import 'package:boton_ceti/models/text_input.dart';
 import 'package:boton_ceti/views/register_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Logincreen extends StatefulWidget {
   const Logincreen({super.key});
@@ -29,10 +33,16 @@ class _LogincreenState extends State<Logincreen> {
   ];
   int passLength = 0;
 
-  void doLogin() {
-    if (_formKey.currentState!.validate()) {
-      print('Doing login');
-    }
+  Future<void> doLogin() async {
+    // if (_formKey.currentState!.validate()) {
+    final singletonProvider =
+        Provider.of<ControllersProvider>(context, listen: false);
+    final response = await singletonProvider.loginController.login(
+      loginControllers[0].text,
+      loginControllers[1].text,
+    );
+    print(response);
+    // }
   }
 
   @override
