@@ -15,10 +15,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as map_tool;
 
 class MapScreen extends StatefulWidget {
-  final AlertData alertData;
+  final AlertData? alertData;
   const MapScreen({
     super.key,
-    required this.alertData,
+    this.alertData,
   });
 
   @override
@@ -69,13 +69,13 @@ class MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
   _generateMarkers() async {
     BitmapDescriptor markerIcon = BitmapDescriptor.fromBytes(
       await getBytesFromAsset(
-        widget.alertData.resourcePath,
+        widget.alertData!.resourcePath,
         (MediaQuery.of(context).size.width * 0.4).round(),
       ),
     );
     _markers['0'] = Marker(
       icon: markerIcon,
-      markerId: MarkerId(widget.alertData.alertText),
+      markerId: MarkerId(widget.alertData!.alertText),
       position: LatLng(
         _currentPosition.latitude,
         _currentPosition.longitude,
@@ -262,7 +262,7 @@ class MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
               markers: _markers.values.toSet(),
             ),
             AlertDataBottomSheet(
-              alertData: widget.alertData,
+              alertData: widget.alertData!,
             ),
             // if (_positionFetched && !_withinBounds) ...[
             //   Align(

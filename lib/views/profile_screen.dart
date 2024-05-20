@@ -1,5 +1,6 @@
 import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/models/list_element.dart';
+import 'package:boton_ceti/services/local_storage.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -86,11 +87,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           child: Container(
                                             margin: const EdgeInsets.only(
                                                 left: 5, right: 5),
-                                            child: const FittedBox(
+                                            child: FittedBox(
                                               fit: BoxFit.scaleDown,
                                               child: Text(
-                                                'KEVIN LLAMAS ALCALÁ',
-                                                style: TextStyle(
+                                                '${LocalStorage.nombre} ${LocalStorage.apellidoPaterno} ${LocalStorage.apellidoMaterno}'
+                                                    .toUpperCase(),
+                                                style: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 18,
                                                     fontWeight:
@@ -111,13 +113,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         child: Container(
                                           margin: const EdgeInsets.only(
                                               left: 5, right: 5),
-                                          child: const FittedBox(
+                                          child: FittedBox(
                                             fit: BoxFit.scaleDown,
-                                            child: Text('a20310169@ceti.mx',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 15,
-                                                )),
+                                            child:
+                                                Text('${LocalStorage.correo}',
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 15,
+                                                    )),
                                           ),
                                         ),
                                       )
@@ -140,16 +143,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Container(
                         margin:
                             const EdgeInsets.only(right: 5, left: 5, top: 10),
-                        child: const Column(
+                        child: Column(
                           children: [
-                            ListElement(
+                            const ListElement(
                                 icon: Icons.person,
                                 text: 'Información de usuario'),
-                            ListElement(
+                            const ListElement(
                                 icon: Icons.settings, text: 'Configuración'),
-                            ListElement(
+                            GestureDetector(
+                              onTap: () => LocalStorage.clearStorage(context),
+                              child: const ListElement(
                                 icon: Icons.logout_outlined,
-                                text: 'Cerrar sesión'),
+                                text: 'Cerrar sesión',
+                              ),
+                            ),
                           ],
                         ),
                       ),

@@ -1,5 +1,8 @@
 import 'package:boton_ceti/data/alerts_data.dart';
+import 'package:boton_ceti/global/global_vars.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 
 class AlertCard extends StatelessWidget {
   final AlertData alertData;
@@ -10,6 +13,24 @@ class AlertCard extends StatelessWidget {
       required this.alertIcon,
       required this.containerHeight,
       required this.alertData});
+
+  Future<Widget?> loadImage(String assetPath) async {
+    try {
+      await rootBundle.load(assetPath);
+      return Image.asset(assetPath);
+    } catch (assetException) {
+      try {
+        final response = await http.head(Uri.parse(assetPath));
+        if (response.statusCode == 200) {
+          return Image.network(assetPath);
+        } else {
+          return null;
+        }
+      } catch (networkException) {
+        return null;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +61,35 @@ class AlertCard extends StatelessWidget {
                     SizedBox(
                       height: null,
                       width: constraints.maxHeight * 0.65,
-                      child: Image.asset(alertData.resourcePath),
+                      child: FutureBuilder(
+                        future: loadImage(alertData.resourcePath),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return SizedBox(
+                              height: constraints.maxHeight * 0.65,
+                              width: constraints.maxHeight * 0.65,
+                              child: CircularProgressIndicator(
+                                color: VariablesGlobales.coloresApp[1],
+                              ),
+                            );
+                          }
+                          if (snapshot.hasError) {
+                            return Image.asset(
+                              VariablesGlobales.placeholderImage,
+                            );
+                          }
+                          if (snapshot.connectionState ==
+                                  ConnectionState.done &&
+                              snapshot.hasData) {
+                            return snapshot.data!;
+                          } else {
+                            return Image.asset(
+                              VariablesGlobales.placeholderImage,
+                            );
+                          }
+                        },
+                      ),
                     )
                   ],
                 ),
@@ -60,7 +109,7 @@ class AlertCard extends StatelessWidget {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        alertData.alertTitle,
+                                        alertData.alertTitle.toUpperCase(),
                                         style: TextStyle(
                                           color: Colors.grey[700],
                                           fontFamily: 'Nutmeg',

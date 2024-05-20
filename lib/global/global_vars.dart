@@ -1,4 +1,10 @@
 import 'package:boton_ceti/data/alerts_data.dart';
+import 'package:boton_ceti/middlewares/check_auth_screen.dart';
+import 'package:boton_ceti/views/alert_screen.dart';
+import 'package:boton_ceti/views/home_screen.dart';
+import 'package:boton_ceti/views/login.dart';
+import 'package:boton_ceti/views/map_screen.dart';
+import 'package:boton_ceti/views/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as map_tool;
@@ -47,6 +53,15 @@ class VariablesGlobales {
     'ceti.mx',
     'live.ceti.mx',
   ];
+
+  static Map<String, Widget Function(BuildContext)> routesNames = {
+    'loginScreen': (context) => const LoginScreen(),
+    'homeScreen': (context) => const HomeScreen(),
+    'registerScreen': (context) => const RegisterScreen(),
+    'alertScreen': (context) => const AlertScreen(),
+    'mapScreen': (context) => const MapScreen(),
+    'checking': (context) => const CheckAuthScreen(),
+  };
 
   static Map<String, LatLng> buildingsLatLng = {
     planteles[0]: const LatLng(20.703112331160806, -103.38930647712071),
@@ -153,6 +168,8 @@ class VariablesGlobales {
     map_tool.LatLng(20.629114715966278, -103.25120650021393),
     map_tool.LatLng(20.62975016421788, -103.25176410299532)
   ];
+
+  static String placeholderImage = 'assets/images/castor.png';
 
   static List<AlertData> alertsData = [
     AlertData(

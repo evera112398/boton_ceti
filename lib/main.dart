@@ -1,7 +1,6 @@
-import 'package:boton_ceti/controllers/alertas_controller.dart';
 import 'package:boton_ceti/controllers/controllers_provider.dart';
-import 'package:boton_ceti/controllers/encryption_controller.dart';
-import 'package:boton_ceti/controllers/login_controller.dart';
+import 'package:boton_ceti/global/global_vars.dart';
+import 'package:boton_ceti/services/local_storage.dart';
 import 'package:boton_ceti/views/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await dotenv.load(fileName: '.env');
+  await LocalStorage.configurePrefs();
   runApp(const AppState());
 }
 
@@ -42,10 +42,8 @@ class _BotonCetiState extends State<BotonCeti> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Botón CETI',
-      initialRoute: 'loginScreen',
-      routes: {
-        'loginScreen': (context) => const Logincreen(),
-      },
+      initialRoute: 'checking',
+      routes: VariablesGlobales.routesNames,
     );
   }
 }

@@ -274,7 +274,8 @@ class _RegisterScreenState extends State<RegisterScreen>
                                           Future.microtask(
                                             () => Navigator.of(context)
                                                 .pushAndRemoveUntil(
-                                              crearRutaNamed(const Logincreen(),
+                                              crearRutaNamed(
+                                                  const LoginScreen(),
                                                   'loginScreen'),
                                               (route) => false,
                                             ),

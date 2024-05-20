@@ -3,7 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class AppBanner extends StatelessWidget {
-  const AppBanner({super.key});
+  final String? displayText;
+  const AppBanner({super.key, this.displayText});
 
   @override
   Widget build(BuildContext context) {
@@ -79,11 +80,11 @@ class AppBanner extends StatelessWidget {
                     children: [
                       SizedBox(
                         width: constraints.maxWidth * 0.8,
-                        child: const FittedBox(
+                        child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
-                            'SecurePush',
-                            style: TextStyle(
+                            displayText ?? 'SecurePush',
+                            style: const TextStyle(
                               fontFamily: 'Nutmeg',
                               color: Colors.white,
                               fontSize: 24,

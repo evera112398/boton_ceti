@@ -36,6 +36,49 @@ class TextInput extends StatefulWidget {
 }
 
 class _TextInputState extends State<TextInput> {
+  bool showPassword = false;
+  bool isIconVisible = false;
+
+  @override
+  void initState() {
+    widget.focusNode.addListener(() {
+      if (!widget.focusNode.hasFocus) {
+        showPassword = false;
+        isIconVisible = false;
+      } else {
+        if (widget.controller.text.isNotEmpty) {
+          isIconVisible = true;
+        }
+      }
+      setState(() {});
+    });
+    widget.controller.addListener(() {
+      isIconVisible = false;
+      if (widget.controller.text.isNotEmpty) {
+        isIconVisible = true;
+      }
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  bool isTextObscure() {
+    if (!widget.isPassword) {
+      return false;
+    }
+    if (showPassword) {
+      return false;
+    }
+    return true;
+  }
+
+  IconData switchIcon() {
+    if (!showPassword) {
+      return Icons.visibility;
+    }
+    return Icons.visibility_off;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -56,7 +99,7 @@ class _TextInputState extends State<TextInput> {
         enableInteractiveSelection: false,
         focusNode: widget.focusNode,
         onChanged: widget.onChanged,
-        obscureText: widget.isPassword ? true : false,
+        obscureText: isTextObscure(),
         validator: widget.validator,
         autofillHints: widget.autofillHints,
         textCapitalization: TextCapitalization.words,
@@ -68,6 +111,18 @@ class _TextInputState extends State<TextInput> {
             borderRadius: BorderRadius.circular(10),
           ),
           labelText: widget.hintText,
+          suffixIcon: widget.isPassword
+              ? isIconVisible
+                  ? IconButton(
+                      onPressed: () => setState(() {
+                        showPassword = !showPassword;
+                      }),
+                      icon: Icon(
+                        switchIcon(),
+                      ),
+                    )
+                  : null
+              : null,
         ),
         onFieldSubmitted: widget.onFieldSubmited,
       ),

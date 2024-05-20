@@ -1,5 +1,7 @@
 import 'package:boton_ceti/global/global_vars.dart';
+import 'package:boton_ceti/services/local_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
 class AlertEndBody extends StatefulWidget {
@@ -10,6 +12,13 @@ class AlertEndBody extends StatefulWidget {
 }
 
 class _AlertEndBodyState extends State<AlertEndBody> {
+  String getCurrentDate() {
+    var now = DateTime.now();
+    var formatter = DateFormat('dd/MM/yyyy');
+    String formattedDate = formatter.format(now);
+    return formattedDate;
+  }
+
   void showAboutDialog() {
     showDialog(
       context: context,
@@ -113,15 +122,15 @@ class _AlertEndBodyState extends State<AlertEndBody> {
             ),
           ],
         ),
-        const Row(
+        Row(
           children: [
             Expanded(
               child: FittedBox(
                 alignment: Alignment.center,
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  'Edwin Manuel Vera',
-                  style: TextStyle(
+                  '${LocalStorage.nombre} ${LocalStorage.apellidoPaterno} ${LocalStorage.apellidoMaterno}',
+                  style: const TextStyle(
                     fontFamily: 'Nutmeg',
                     fontSize: 20,
                     fontWeight: FontWeight.w300,
@@ -149,15 +158,15 @@ class _AlertEndBodyState extends State<AlertEndBody> {
             ),
           ],
         ),
-        const Row(
+        Row(
           children: [
             Expanded(
               child: FittedBox(
                 alignment: Alignment.center,
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  'evera@c5jalisco.gob.mx',
-                  style: TextStyle(
+                  '${LocalStorage.correo}',
+                  style: const TextStyle(
                     fontFamily: 'Nutmeg',
                     fontSize: 20,
                     fontWeight: FontWeight.w300,
@@ -185,15 +194,15 @@ class _AlertEndBodyState extends State<AlertEndBody> {
             ),
           ],
         ),
-        const Row(
+        Row(
           children: [
             Expanded(
               child: FittedBox(
                 alignment: Alignment.center,
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  '3337798743',
-                  style: TextStyle(
+                  '${LocalStorage.celular}',
+                  style: const TextStyle(
                     fontFamily: 'Nutmeg',
                     fontSize: 20,
                     fontWeight: FontWeight.w300,
@@ -221,15 +230,15 @@ class _AlertEndBodyState extends State<AlertEndBody> {
             ),
           ],
         ),
-        const Row(
+        Row(
           children: [
             Expanded(
               child: FittedBox(
                 alignment: Alignment.center,
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  '26/04/2024',
-                  style: TextStyle(
+                  getCurrentDate(),
+                  style: const TextStyle(
                     fontFamily: 'Nutmeg',
                     fontSize: 20,
                     fontWeight: FontWeight.w300,
