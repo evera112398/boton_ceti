@@ -1,13 +1,11 @@
 import 'dart:convert';
 
-import 'package:boton_ceti/animations/page_animation.dart';
 import 'package:boton_ceti/controllers/controllers_provider.dart';
 import 'package:boton_ceti/data/alerts_data.dart';
 import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/models/alert_card.dart';
 import 'package:boton_ceti/models/app_banner.dart';
 import 'package:boton_ceti/services/local_storage.dart';
-import 'package:boton_ceti/views/map_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -50,6 +48,7 @@ class _AlertScreenState extends State<AlertScreen> {
             alertTitle: alertObject['alertTitle'],
             alertText: alertObject['alertText'],
             resourcePath: alertObject['resourcePath'],
+            alertId: alertObject['alertId'],
           ),
         )
       },
@@ -88,24 +87,11 @@ class _AlertScreenState extends State<AlertScreen> {
                                       .map(
                                         (e) => Column(
                                           children: [
-                                            GestureDetector(
-                                              onTap: () => Future.microtask(
-                                                () =>
-                                                    Navigator.of(context).push(
-                                                  crearRutaNamed(
-                                                    MapScreen(
-                                                      alertData: e,
-                                                    ),
-                                                    'alertRunning',
-                                                  ),
-                                                ),
-                                              ),
-                                              child: AlertCard(
-                                                alertIcon: Icons.copy,
-                                                containerHeight:
-                                                    constraints.maxHeight,
-                                                alertData: e,
-                                              ),
+                                            AlertCard(
+                                              alertIcon: Icons.copy,
+                                              containerHeight:
+                                                  constraints.maxHeight,
+                                              alertData: e,
                                             ),
                                             const SizedBox(
                                               height: 10,

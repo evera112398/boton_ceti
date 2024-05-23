@@ -8,7 +8,13 @@ import 'package:flutter/material.dart';
 
 class AlertDataBottomSheet extends StatefulWidget {
   final AlertData alertData;
-  const AlertDataBottomSheet({super.key, required this.alertData});
+  final Widget alertImage;
+  final String folio;
+  const AlertDataBottomSheet(
+      {super.key,
+      required this.alertData,
+      required this.alertImage,
+      required this.folio});
 
   @override
   State<AlertDataBottomSheet> createState() => _AlertDataBottomSheetState();
@@ -113,9 +119,7 @@ class _AlertDataBottomSheetState extends State<AlertDataBottomSheet> {
                                         padding: const EdgeInsets.all(5),
                                         margin:
                                             const EdgeInsets.only(bottom: 5),
-                                        child: Image.asset(
-                                          widget.alertData.resourcePath,
-                                        ),
+                                        child: widget.alertImage,
                                       )
                                     ],
                                   ),
@@ -123,8 +127,10 @@ class _AlertDataBottomSheetState extends State<AlertDataBottomSheet> {
                               ],
                             ),
                           ),
-                          const Expanded(
-                            child: AlertEndBody(),
+                          Expanded(
+                            child: AlertEndBody(
+                              folio: widget.folio,
+                            ),
                           ),
                           Container(
                             height: null,

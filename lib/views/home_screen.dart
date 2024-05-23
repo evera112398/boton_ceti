@@ -1,14 +1,15 @@
-import 'dart:convert';
-
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/middlewares/connectivity_middleware.dart';
 import 'package:boton_ceti/models/bnb.dart';
 import 'package:boton_ceti/services/local_storage.dart';
+import 'package:boton_ceti/services/location_service.dart';
 import 'package:boton_ceti/views/alert_screen.dart';
 import 'package:boton_ceti/views/map.dart';
+import 'package:boton_ceti/views/no_location.dart';
 import 'package:boton_ceti/views/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,11 +18,43 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   final PageController _pageController = PageController(initialPage: 1);
+  Position? userLocation;
   int _currentPageIndex = 1;
   late NotchBottomBarController _nbController;
   bool hasInternet = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _nbController = NotchBottomBarController(index: _currentPageIndex);
+    checkInternetConnectivity().whenComplete(() {
+      loadStorage();
+    });
+    validatePermissions();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      await LocationService.onResumeLocationCheck(context);
+      setState(() {});
+    }
+    super.didChangeAppLifecycleState(state);
+  }
+
+  void validatePermissions() {
+    LocationService.validatePermissions(context);
+    setState(() {});
+  }
 
   void changePage(pageIndex) {
     setState(() {
@@ -33,15 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void loadStorage() {
     print(LocalStorage.prefs);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _nbController = NotchBottomBarController(index: _currentPageIndex);
-    checkInternetConnectivity().whenComplete(() {
-      loadStorage();
-    });
   }
 
   Future<void> checkInternetConnectivity() async {
@@ -56,6 +80,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Widget centerWidget;
+    if (LocalStorage.locationEnabled != null && LocalStorage.location != null) {
+      if (!LocalStorage.locationEnabled!) {
+        centerWidget = NoLocationScreen(
+          locationErrorId:
+              VariablesGlobales.locationIdentifier['locationDisabled'],
+        );
+      } else if (!LocalStorage.location!) {
+        centerWidget = NoLocationScreen(
+          locationErrorId:
+              VariablesGlobales.locationIdentifier['notLocationPermission'],
+        );
+      } else {
+        centerWidget = const AlertScreen();
+      }
+    } else {
+      centerWidget = const AlertScreen();
+    }
+
     return Scaffold(
       backgroundColor: VariablesGlobales.bgColor,
       body: SafeArea(
@@ -65,10 +108,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   PageView(
                     controller: _pageController,
                     physics: const NeverScrollableScrollPhysics(),
-                    children: const [
-                      Map(),
-                      AlertScreen(),
-                      ProfileScreen(),
+                    children: [
+                      const Map(),
+                      centerWidget,
+                      const ProfileScreen(),
                     ],
                   ),
                   Align(

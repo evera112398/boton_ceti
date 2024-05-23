@@ -1,15 +1,23 @@
+import 'dart:convert';
+
 import 'package:boton_ceti/animations/page_animation.dart';
+import 'package:boton_ceti/controllers/controllers_provider.dart';
+import 'package:boton_ceti/data/user_data.dart';
 import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/models/adaptative_button.dart';
 import 'package:boton_ceti/models/app_banner.dart';
+import 'package:boton_ceti/models/dynamic_alert_dialog.dart';
+import 'package:boton_ceti/models/error_popup_content.dart';
 import 'package:boton_ceti/models/expansion_tile_builder.dart';
 import 'package:boton_ceti/models/password_conditions.dart';
 import 'package:boton_ceti/models/text_input.dart';
 import 'package:boton_ceti/models/timer.dart';
 import 'package:boton_ceti/views/login.dart';
+import 'package:crypto/crypto.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -181,7 +189,7 @@ class _RegisterScreenState extends State<RegisterScreen>
     }
   }
 
-  void registerNewUser() {
+  void registerNewUser() async {
     bool allValid = true;
     for (var key in registerFormKeys) {
       if (!key.currentState!.validate()) {
@@ -189,7 +197,38 @@ class _RegisterScreenState extends State<RegisterScreen>
       }
     }
     if (allValid) {
-      succesfulRegister(context);
+      final passToHash = utf8.encode(passwordController[0].text);
+      final hashedPassword = sha512.convert(passToHash);
+      final singletonProvider =
+          Provider.of<ControllersProvider>(context, listen: false);
+      UserData newUser = UserData(
+        nombre: personalDataControllers[0].text,
+        apellidoPaterno: personalDataControllers[1].text,
+        apellidoMaterno: personalDataControllers[2].text,
+        correo: emailController.text,
+        celular: phoneController.text,
+        idEstablecimiento: 1,
+        password: hashedPassword.toString(),
+        acepto: 1,
+      );
+      final response =
+          await singletonProvider.usuariosController.createUsuario(newUser);
+      if (response['ok']) {
+        Future.microtask(() => succesfulRegister(context));
+      } else {
+        Future.microtask(
+          () => showDialog(
+            context: context,
+            builder: (context) {
+              return DynamicAlertDialog(
+                child: ErrorPopupContent(
+                  error: response['payload'],
+                ),
+              );
+            },
+          ),
+        );
+      }
     }
   }
 
@@ -621,7 +660,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                         return "Ingresa un correo electrónico válido";
                                       }
                                       if (!emailRegex.hasMatch(value)) {
-                                        return 'Sólo se permiten los dominios ceti.mx y live.ceti.mx';
+                                        return 'Sólo se permite el dominio ceti.mx';
                                       }
                                       return null;
                                     },

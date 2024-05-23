@@ -1,4 +1,3 @@
-import 'package:boton_ceti/data/alerts_data.dart';
 import 'package:boton_ceti/middlewares/check_auth_screen.dart';
 import 'package:boton_ceti/views/alert_screen.dart';
 import 'package:boton_ceti/views/home_screen.dart';
@@ -7,7 +6,6 @@ import 'package:boton_ceti/views/map_screen.dart';
 import 'package:boton_ceti/views/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:maps_toolkit/maps_toolkit.dart' as map_tool;
 
 class VariablesGlobales {
   static Color bgColor = const Color.fromRGBO(255, 255, 255, 1);
@@ -30,7 +28,7 @@ class VariablesGlobales {
   ];
 
   static List<String> locationErrorContentMessages = [
-    'Para poder proceder con las alarmas, es necesario activar los servicios de ubicación.',
+    'Para poder emitir alarmas, es necesario activar los servicios de ubicación.',
     'El acceso a la ubicación es obligatorio, ya que este permiso lo utilizamos para poder obtener tu ubicación y emitir la alarma.'
   ];
 
@@ -51,7 +49,6 @@ class VariablesGlobales {
 
   static List<String> emailAddressPool = [
     'ceti.mx',
-    'live.ceti.mx',
   ];
 
   static Map<String, Widget Function(BuildContext)> routesNames = {
@@ -151,46 +148,39 @@ class VariablesGlobales {
     const LatLng(20.661174930, -103.193735665),
   ];
 
+  static Map<String, LatLng> colomosMarkers = {
+    'Dirección General (Edificio H)':
+        const LatLng(20.702205744702606, -103.38948749911697),
+    'Gimnasio Jorge Matute Remus (Edificio J)':
+        const LatLng(20.7022323568745, -103.38891282686461),
+    'Electromechanics & Construction (Edificio E)':
+        const LatLng(20.702525090458735, -103.38998630704918),
+  };
+
+  // static Set<Marker> colomosMarkers = {
+  //   const Marker(
+  //     markerId: MarkerId('Dirección General (Edificio H)'),
+  //     infoWindow: InfoWindow(title: 'Dirección General (Edificio H)'),
+  //     position: LatLng(20.702205744702606, -103.38948749911697),
+  //   ),
+  //   const Marker(
+  //     markerId: MarkerId('Gimnasio Jorge Matute Remus (Edificio J)'),
+  //     infoWindow: InfoWindow(title: 'Gimnasio Jorge Matute Remus (Edificio J)'),
+  //     position: LatLng(20.7022323568745, -103.38891282686461),
+  //   ),
+  //   const Marker(
+  //     markerId: MarkerId('Electromechanics & Construction (Edificio E)'),
+  //     infoWindow:
+  //         InfoWindow(title: 'Electromechanics & Construction (Edificio E)'),
+  //     position: LatLng(20.702525090458735, -103.38998630704918),
+  //   ),
+  // };
+
   static Map<String, List<LatLng>> coordinatesPlanteles = {
     planteles[0]: coordinatesColomos,
     planteles[1]: coordinatesTonala,
     planteles[2]: coordinatesRio,
   };
 
-  static List<map_tool.LatLng> coordinatesTonalaCopy = [
-    map_tool.LatLng(20.630172611583806, -103.251650306506),
-    map_tool.LatLng(20.63071220651828, -103.25157823539821),
-    map_tool.LatLng(20.63115595092246, -103.25175272334673),
-    map_tool.LatLng(20.631297948857387, -103.25084235145874),
-    map_tool.LatLng(20.631067202145836, -103.25043268410914),
-    map_tool.LatLng(20.630261360885637, -103.25018612505613),
-    map_tool.LatLng(20.628972715994287, -103.25059958562193),
-    map_tool.LatLng(20.629114715966278, -103.25120650021393),
-    map_tool.LatLng(20.62975016421788, -103.25176410299532)
-  ];
-
   static String placeholderImage = 'assets/images/castor.png';
-
-  static List<AlertData> alertsData = [
-    AlertData(
-      alertTitle: 'SEGURIDAD',
-      alertText: 'Viví o presencié un incidente de seguridad.',
-      resourcePath: 'assets/icons/seguridad.png',
-    ),
-    AlertData(
-      alertTitle: 'MÉDICO',
-      alertText: 'Sufrí un accidente médico.',
-      resourcePath: 'assets/icons/medico.png',
-    ),
-    AlertData(
-      alertTitle: 'ACOSO',
-      alertText: 'Sufrí o presencié acoso o bullying',
-      resourcePath: 'assets/icons/acoso.jpg',
-    ),
-    AlertData(
-      alertTitle: 'INCENDIO',
-      alertText: 'Hay un incendio en el plantel.',
-      resourcePath: 'assets/icons/incendio.png',
-    ),
-  ];
 }

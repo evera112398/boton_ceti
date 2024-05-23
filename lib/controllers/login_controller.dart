@@ -195,6 +195,7 @@ class LoginController extends ChangeNotifier {
     LocalStorage.idPerfil = data['id_perfil'];
     LocalStorage.tokenUsuario = data['token'];
     LocalStorage.hasSession = true;
+    LocalStorage.location = false;
     await getUsuario();
   }
 
@@ -216,6 +217,7 @@ class LoginController extends ChangeNotifier {
         alertTitle: profile['nombre'],
         alertText: profile['descripcion'],
         resourcePath: profile['path'],
+        alertId: profile['id_tipo_alerta'],
       );
       userCastedProfiles.add(profileData);
     }

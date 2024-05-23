@@ -5,7 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
 class AlertEndBody extends StatefulWidget {
-  const AlertEndBody({super.key});
+  final String folio;
+  const AlertEndBody({super.key, required this.folio});
 
   @override
   State<AlertEndBody> createState() => _AlertEndBodyState();
@@ -266,15 +267,15 @@ class _AlertEndBodyState extends State<AlertEndBody> {
             ),
           ],
         ),
-        const Row(
+        Row(
           children: [
             Expanded(
               child: FittedBox(
                 alignment: Alignment.center,
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  'T000001',
-                  style: TextStyle(
+                  widget.folio,
+                  style: const TextStyle(
                     fontFamily: 'Nutmeg',
                     fontSize: 20,
                     fontWeight: FontWeight.w300,

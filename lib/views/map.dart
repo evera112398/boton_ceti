@@ -18,6 +18,7 @@ class _MapState extends State<Map> {
   final Completer<GoogleMapController> _controller = Completer();
   final LatLng _center = const LatLng(20.703192619295034, -103.3892635617766);
   final Set<Polygon> _polygon = HashSet<Polygon>();
+  late Set<Marker> interestPoints;
   bool optionsPopulated = false;
   @override
   void initState() {
@@ -50,7 +51,6 @@ class _MapState extends State<Map> {
 
   void _onDropdownBuildingChange(String value) async {
     selectedBuilding = value;
-    setState(() {});
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(
       CameraUpdate.newCameraPosition(
@@ -58,6 +58,7 @@ class _MapState extends State<Map> {
             target: VariablesGlobales.buildingsLatLng[value]!, zoom: 18),
       ),
     );
+    setState(() {});
   }
 
   void _recenterMap() async {
@@ -76,7 +77,16 @@ class _MapState extends State<Map> {
     options.addAll(VariablesGlobales.planteles);
     optionsPopulated = true;
     selectedBuilding = options[0];
-    setState(() {});
+  }
+
+  Set<Marker> generateMarkers() {
+    interestPoints = VariablesGlobales.colomosMarkers.entries.map((entry) {
+      return Marker(
+        markerId: MarkerId(entry.key),
+        position: entry.value,
+      );
+    }).toSet();
+    return interestPoints;
   }
 
   @override
@@ -101,6 +111,7 @@ class _MapState extends State<Map> {
                     target: _center,
                     zoom: 18.0,
                   ),
+                  markers: generateMarkers(),
                 ),
                 Positioned(
                   child: Column(

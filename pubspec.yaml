@@ -50,6 +50,8 @@ dependencies:
   shared_preferences: ^2.2.3
   connectivity: ^3.0.6
   intl: ^0.19.0
+  custom_info_window: ^1.0.1
+  clippy_flutter: ^2.0.0-nullsafety.1
 
 dev_dependencies:
   flutter_test:

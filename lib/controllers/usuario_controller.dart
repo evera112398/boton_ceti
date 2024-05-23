@@ -3,13 +3,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:boton_ceti/controllers/encryption_controller.dart';
-import 'package:boton_ceti/services/local_storage.dart';
+import 'package:boton_ceti/data/user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
-class AlertasController extends ChangeNotifier {
+class UsuariosController extends ChangeNotifier {
   bool ok = false;
   Map<dynamic, dynamic> decodeResp = {};
 
@@ -21,32 +20,23 @@ class AlertasController extends ChangeNotifier {
   late String _baseUrl, _appToken, _appId, _key;
   final EncryptionController encryptController = EncryptionController();
 
-  AlertasController() {
+  UsuariosController() {
     _key = keyCipher ?? '';
     _baseUrl = encryptController.decrypt(baseUrl);
     _appId = encryptController.decrypt(appId);
     _appToken = encryptController.decrypt(appToken);
   }
 
-  Future<Map<String, dynamic>> createAlerta(LatLng coordinatesAlerta) async {
+  Future<Map<String, dynamic>> createUsuario(UserData newUser) async {
     try {
-      final requestBody = {
-        "id_usuario": LocalStorage.idUsuario,
-        // "id_usuario": 1,
-        "id_aplicacion": _appId,
-        "tipo_alerta": 1,
-        "latitud": coordinatesAlerta.latitude,
-        "longitud": coordinatesAlerta.longitude
-      };
-
+      final requestBody = newUser.toJson();
       final requestHeaders = {
         "Content-Type": "application/json",
         "auth": _appToken,
-        "token": LocalStorage.tokenUsuario!
       };
 
       final resp = await http
-          .post(Uri.parse('$_baseUrl/createAlerta'),
+          .post(Uri.parse('$_baseUrl/createUsuario'),
               headers: requestHeaders, body: json.encode(requestBody))
           .timeout(const Duration(seconds: 30));
 
@@ -56,7 +46,6 @@ class AlertasController extends ChangeNotifier {
         return {
           'ok': ok,
           'exc': false,
-          'payload': decodeResp['folio'],
         };
       } else {
         decodeResp.remove('ok');
@@ -74,7 +63,7 @@ class AlertasController extends ChangeNotifier {
           'Verifica tu conexión a internet. Inténtalo de nuevo más tarde.');
     } catch (ex) {
       return _handleError(
-          'Sucedió un error inesperado. Inténtalo de nuevo más tarde. $ex');
+          'Sucedió un error inesperado. Inténtalo de nuevo más tarde.');
     }
   }
 
