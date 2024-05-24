@@ -2,8 +2,12 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:boton_ceti/global/global_vars.dart';
+import 'package:boton_ceti/models/custom_infowindow.dart';
+import 'package:custom_info_window/custom_info_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'dart:ui' as ui;
 
 class Map extends StatefulWidget {
   const Map({super.key});
@@ -18,14 +22,62 @@ class _MapState extends State<Map> {
   final Completer<GoogleMapController> _controller = Completer();
   final LatLng _center = const LatLng(20.703192619295034, -103.3892635617766);
   final Set<Polygon> _polygon = HashSet<Polygon>();
-  late Set<Marker> interestPoints;
+  final CustomInfoWindowController _customInfoWindowController =
+      CustomInfoWindowController();
+  BitmapDescriptor? buildingAsset;
+  BitmapDescriptor? securityAsset;
+  BitmapDescriptor? libraryAsset;
+  BitmapDescriptor? auditoriumAsset;
+  BitmapDescriptor? defaultAsset;
+
   bool optionsPopulated = false;
   @override
   void initState() {
     super.initState();
-    _loadPolygons();
-    options = [];
-    _populateOptions();
+    loadMarkerAssets().whenComplete(() {
+      _loadPolygons();
+      options = [];
+      _populateOptions();
+    });
+  }
+
+  @override
+  void dispose() {
+    _customInfoWindowController.dispose();
+    super.dispose();
+  }
+
+  Future<void> loadMarkerAssets() async {
+    await getBytesFromAsset('assets/icons/buildings/edificio.png', 128)
+        .then((onValue) {
+      buildingAsset = BitmapDescriptor.fromBytes(onValue);
+    });
+    await getBytesFromAsset('assets/icons/buildings/caseta.png', 128)
+        .then((onValue) {
+      securityAsset = BitmapDescriptor.fromBytes(onValue);
+    });
+    await getBytesFromAsset('assets/icons/buildings/biblioteca.png', 128)
+        .then((onValue) {
+      libraryAsset = BitmapDescriptor.fromBytes(onValue);
+    });
+    await getBytesFromAsset('assets/icons/buildings/auditorio.png', 128)
+        .then((onValue) {
+      auditoriumAsset = BitmapDescriptor.fromBytes(onValue);
+    });
+    await getBytesFromAsset('assets/images/castor.png', 128).then((onValue) {
+      defaultAsset = BitmapDescriptor.fromBytes(onValue);
+    });
+    setState(() {});
+  }
+
+  static Future<Uint8List> getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
   }
 
   void _loadPolygons() {
@@ -46,6 +98,8 @@ class _MapState extends State<Map> {
   void _onMapCreated(GoogleMapController controller) async {
     if (!_controller.isCompleted) {
       _controller.complete(controller);
+      _customInfoWindowController.googleMapController =
+          await _controller.future;
     }
   }
 
@@ -79,13 +133,35 @@ class _MapState extends State<Map> {
     selectedBuilding = options[0];
   }
 
+  BitmapDescriptor getBuildingAsset(String bldgType) {
+    switch (bldgType) {
+      case 'Edificio':
+        return buildingAsset!;
+      case 'Seguridad':
+        return securityAsset!;
+      case 'Biblioteca':
+        return libraryAsset!;
+      case 'Auditorio':
+        return auditoriumAsset!;
+      default:
+        return defaultAsset!;
+    }
+  }
+
   Set<Marker> generateMarkers() {
-    interestPoints = VariablesGlobales.colomosMarkers.entries.map((entry) {
-      return Marker(
-        markerId: MarkerId(entry.key),
-        position: entry.value,
+    final Set<Marker> interestPoints = {};
+    for (var point in VariablesGlobales.colomosMarkers) {
+      final newMarker = Marker(
+        markerId: MarkerId(point.displayText),
+        position: point.location,
+        onTap: () => _customInfoWindowController.addInfoWindow!(
+          CustomInfoWindowMap(title: point.displayText),
+          point.location,
+        ),
+        // icon: getBuildingAsset(point.buildingType), //? Aquí se generan los íconos personalizados.
       );
-    }).toSet();
+      interestPoints.add(newMarker);
+    }
     return interestPoints;
   }
 
@@ -101,10 +177,12 @@ class _MapState extends State<Map> {
                   mapType: MapType.normal,
                   compassEnabled: false,
                   buildingsEnabled: true,
-                  rotateGesturesEnabled: false,
+                  rotateGesturesEnabled: true,
                   scrollGesturesEnabled: true,
                   zoomControlsEnabled: false,
                   zoomGesturesEnabled: true,
+                  indoorViewEnabled: true,
+                  tiltGesturesEnabled: true,
                   onMapCreated: _onMapCreated,
                   polygons: _polygon,
                   initialCameraPosition: CameraPosition(
@@ -112,6 +190,18 @@ class _MapState extends State<Map> {
                     zoom: 18.0,
                   ),
                   markers: generateMarkers(),
+                  onTap: (argument) {
+                    _customInfoWindowController.hideInfoWindow!();
+                  },
+                  onCameraMove: (position) {
+                    _customInfoWindowController.onCameraMove!();
+                  },
+                ),
+                CustomInfoWindow(
+                  controller: _customInfoWindowController,
+                  height: 500,
+                  width: 500,
+                  offset: 50,
                 ),
                 Positioned(
                   child: Column(

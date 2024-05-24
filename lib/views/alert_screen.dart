@@ -19,16 +19,11 @@ class AlertScreen extends StatefulWidget {
 class _AlertScreenState extends State<AlertScreen> {
   late List<AlertData> alerts = [];
   bool pageLoaded = false;
+
   @override
   void initState() {
     super.initState();
-    loadUserProfiles().whenComplete(
-      () => setState(
-        () {
-          pageLoaded = true;
-        },
-      ),
-    );
+    loadUserProfiles();
   }
 
   Future<void> loadUserProfiles() async {
@@ -36,7 +31,14 @@ class _AlertScreenState extends State<AlertScreen> {
         Provider.of<ControllersProvider>(context, listen: false);
     await singletonProvider.loginController
         .getPerfilTiposAlerta()
-        .then((value) => populateUserProfilesCard());
+        .then((value) => populateUserProfilesCard())
+        .then((value) {
+      if (mounted) {
+        setState(() {
+          pageLoaded = true;
+        });
+      }
+    });
   }
 
   void populateUserProfilesCard() {
@@ -56,9 +58,12 @@ class _AlertScreenState extends State<AlertScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // double screenHeight = MediaQuery.of(context).size.height;
-    // double screenWidth = MediaQuery.of(context).size.width;
     return pageLoaded
         ? Column(
             children: [

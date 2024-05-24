@@ -1,3 +1,4 @@
+import 'package:boton_ceti/data/places_data.dart';
 import 'package:boton_ceti/middlewares/check_auth_screen.dart';
 import 'package:boton_ceti/views/alert_screen.dart';
 import 'package:boton_ceti/views/home_screen.dart';
@@ -148,33 +149,105 @@ class VariablesGlobales {
     const LatLng(20.661174930, -103.193735665),
   ];
 
-  static Map<String, LatLng> colomosMarkers = {
-    'Dirección General (Edificio H)':
-        const LatLng(20.702205744702606, -103.38948749911697),
-    'Gimnasio Jorge Matute Remus (Edificio J)':
-        const LatLng(20.7022323568745, -103.38891282686461),
-    'Electromechanics & Construction (Edificio E)':
-        const LatLng(20.702525090458735, -103.38998630704918),
-  };
-
-  // static Set<Marker> colomosMarkers = {
-  //   const Marker(
-  //     markerId: MarkerId('Dirección General (Edificio H)'),
-  //     infoWindow: InfoWindow(title: 'Dirección General (Edificio H)'),
-  //     position: LatLng(20.702205744702606, -103.38948749911697),
-  //   ),
-  //   const Marker(
-  //     markerId: MarkerId('Gimnasio Jorge Matute Remus (Edificio J)'),
-  //     infoWindow: InfoWindow(title: 'Gimnasio Jorge Matute Remus (Edificio J)'),
-  //     position: LatLng(20.7022323568745, -103.38891282686461),
-  //   ),
-  //   const Marker(
-  //     markerId: MarkerId('Electromechanics & Construction (Edificio E)'),
-  //     infoWindow:
-  //         InfoWindow(title: 'Electromechanics & Construction (Edificio E)'),
-  //     position: LatLng(20.702525090458735, -103.38998630704918),
-  //   ),
-  // };
+  static List<PlacesData> colomosMarkers = [
+    PlacesData(
+      displayText: 'Dirección General (Edificio H)',
+      plantel: planteles[0],
+      location: const LatLng(20.702205744702606, -103.38948749911697),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Gimnasio Jorge Matute Remus (Edificio J)',
+      plantel: planteles[0],
+      location: const LatLng(20.7022323568745, -103.38891282686461),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Electromechanics & Construction (Building E)',
+      plantel: planteles[0],
+      location: const LatLng(20.702547503727285, -103.39001430755043),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Caseta de Seguridad 3',
+      plantel: planteles[0],
+      location: const LatLng(20.701859040346157, -103.38863185750756),
+      buildingType: 'Seguridad',
+    ),
+    PlacesData(
+      displayText: 'Caseta de Seguridad 1',
+      plantel: planteles[0],
+      location: const LatLng(20.703739670876296, -103.38824947501146),
+      buildingType: 'Seguridad',
+    ),
+    PlacesData(
+      displayText: 'Control Automático e Instrumentaciones (Edificio G)',
+      plantel: planteles[0],
+      location: const LatLng(20.70240944605607, -103.38938282842243),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Biblioteca Manuel Sandoval Vallarta',
+      plantel: planteles[0],
+      location: const LatLng(20.70268800845776, -103.38874025832413),
+      buildingType: 'Biblioteca',
+    ),
+    PlacesData(
+      displayText: 'Aulas Centrales (Edificio F)',
+      plantel: planteles[0],
+      location: const LatLng(20.702765787806133, -103.38927133568583),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Auditorio Elías Sourasky (Edificio C)',
+      plantel: planteles[0],
+      location: const LatLng(20.703074371781643, -103.38872362702998),
+      buildingType: 'Auditorio',
+    ),
+    PlacesData(
+      displayText: 'Ingenierías Alonso Lujambio (Edificio L)',
+      plantel: planteles[0],
+      location: const LatLng(20.70318081983255, -103.3902484999595),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText:
+          'Diseño y Mecánica Industrial (Máquinas Herramientas)/Mecánica Automotriz Edificio D',
+      plantel: planteles[0],
+      location: const LatLng(20.70335291068907, -103.3897800377588),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Subdirección de Administrativos (Edificio O)',
+      plantel: planteles[0],
+      location: const LatLng(20.70357290283973, -103.39018780850029),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Gabinete de Orientación Educativa GOE (Edificio P)',
+      plantel: planteles[0],
+      location: const LatLng(20.703824828949113, -103.39002470019948),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Ciencias Básicas y Avanzadas (Edificio B)',
+      plantel: planteles[0],
+      location: const LatLng(20.703439843115373, -103.38901001485954),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Administración de Plantel (Edificio A)',
+      plantel: planteles[0],
+      location: const LatLng(20.703610159549353, -103.38874069650933),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'CETRIONIC',
+      plantel: planteles[0],
+      location: const LatLng(20.703493067021544, -103.38945192454682),
+      buildingType: 'Edificio',
+    ),
+  ];
 
   static Map<String, List<LatLng>> coordinatesPlanteles = {
     planteles[0]: coordinatesColomos,
