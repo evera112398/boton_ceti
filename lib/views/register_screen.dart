@@ -9,10 +9,12 @@ import 'package:boton_ceti/models/app_banner.dart';
 import 'package:boton_ceti/models/dynamic_alert_dialog.dart';
 import 'package:boton_ceti/models/error_popup_content.dart';
 import 'package:boton_ceti/models/expansion_tile_builder.dart';
+import 'package:boton_ceti/models/future_builder.dart';
 import 'package:boton_ceti/models/password_conditions.dart';
 import 'package:boton_ceti/models/text_input.dart';
 import 'package:boton_ceti/models/timer.dart';
 import 'package:boton_ceti/views/login.dart';
+import 'package:boton_ceti/views/validate_email.dart';
 import 'package:crypto/crypto.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -340,6 +342,50 @@ class _RegisterScreenState extends State<RegisterScreen>
     );
   }
 
+  Future<void> sendValidationCode() async {
+    final singletonProvider =
+        Provider.of<ControllersProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return WillPopScope(
+              onWillPop: () async => false,
+              child: VariableFutureBuilder(
+                future: Future.delayed(const Duration(seconds: 2)).then(
+                  (value) =>
+                      singletonProvider.usuariosController.sendCodigoValidacion(
+                    1,
+                    emailController.text,
+                  ),
+                ),
+                nextScreen: const ValidateEmail(),
+                nextScreenName: 'validateEmail',
+                actions: [
+                  ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: VariablesGlobales.coloresApp[1],
+                    ),
+                    child: const Text(
+                      'Aceptar',
+                      style: TextStyle(
+                        fontFamily: 'Nutmeg',
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   //!Esta función es la que evalúa que texto debe tener el botón mostrado en cada una de las cards del registro.
   String setAdaptativeButtonText(int step) {
     if (_states[step] == StepState.complete) {
@@ -353,8 +399,18 @@ class _RegisterScreenState extends State<RegisterScreen>
     if (step == 1 &&
         (_states[step] == StepState.editing ||
             _states[step] == StepState.error)) {
-      _states[step] = StepState
-          .complete; //! Aquí se llama a la API para validar el correo electrónico.
+      sendValidationCode();
+      //  Future.microtask(
+      //   () => Navigator.of(context).push(
+      //     crearRutaNamed(
+      //         ValidateEmail(
+      //           valor: emailController.value.text,
+      //         ),
+      //         'validateEmail'),
+      //   ),
+      // );
+      // _states[step] = StepState
+      //     .complete; //! Aquí se llama a la API para validar el correo electrónico.
       setState(() {});
       return;
     }
