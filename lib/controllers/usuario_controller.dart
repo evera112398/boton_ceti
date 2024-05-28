@@ -67,16 +67,105 @@ class UsuariosController extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> sendCodigoValidacion(
-      int validationFlag, String valor) async {
+  Future<Map<String, dynamic>> sendCodigoValidacionCorreo(String valor) async {
     try {
-      Map requestBody = {};
-      //!1 para validar el correo electrónico.
-      if (validationFlag == 1) {
-        requestBody = {"id_aplicacion": 1, "tipo": "correo", "valor": valor};
+      final requestBody = {
+        "id_aplicacion": 1,
+        "tipo": "correo",
+        "valor": valor
+      };
+
+      final requestHeaders = {
+        "Content-Type": "application/json",
+        "auth": _appToken,
+      };
+
+      final resp = await http
+          .post(Uri.parse('$_baseUrl/sendCodigoValidacion'),
+              headers: requestHeaders, body: json.encode(requestBody))
+          .timeout(const Duration(seconds: 30));
+
+      decodeResp = json.decode(resp.body);
+      ok = decodeResp['ok'];
+      if (ok) {
+        return {
+          'ok': ok,
+          'exc': false,
+        };
       } else {
-        requestBody = {"id_aplicacion": 1, "tipo": "celular", "valor": valor};
+        decodeResp.remove('ok');
+        return {
+          'ok': ok,
+          'exc': false,
+          'payload': decodeResp['message'],
+        };
       }
+    } on TimeoutException {
+      return _handleError(
+          'El servidor está tardando en responder. Inténtalo de nuevo más tarde.');
+    } on SocketException {
+      return _handleError(
+          'Verifica tu conexión a internet. Inténtalo de nuevo más tarde.');
+    } catch (ex) {
+      return _handleError(
+          'Sucedió un error inesperado. Inténtalo de nuevo más tarde.');
+    }
+  }
+
+  Future<Map<String, dynamic>> verificaValidacionCorreo(
+      String valor, String codigo) async {
+    try {
+      final requestBody = {
+        "id_aplicacion": 1,
+        "tipo": "correo",
+        "valor": valor,
+        "codigo": codigo
+      };
+
+      final requestHeaders = {
+        "Content-Type": "application/json",
+        "auth": _appToken,
+      };
+
+      final resp = await http
+          .post(Uri.parse('$_baseUrl/verificaValidacion'),
+              headers: requestHeaders, body: json.encode(requestBody))
+          .timeout(const Duration(seconds: 30));
+
+      decodeResp = json.decode(resp.body);
+      ok = decodeResp['ok'];
+      if (ok) {
+        return {
+          'ok': ok,
+          'exc': false,
+        };
+      } else {
+        decodeResp.remove('ok');
+        return {
+          'ok': ok,
+          'exc': false,
+          'payload': decodeResp['message'],
+        };
+      }
+    } on TimeoutException {
+      return _handleError(
+          'El servidor está tardando en responder. Inténtalo de nuevo más tarde.');
+    } on SocketException {
+      return _handleError(
+          'Verifica tu conexión a internet. Inténtalo de nuevo más tarde.');
+    } catch (ex) {
+      return _handleError(
+          'Sucedió un error inesperado. Inténtalo de nuevo más tarde.');
+    }
+  }
+
+  Future<Map<String, dynamic>> sendCodigoValidacionCelular(String valor) async {
+    try {
+      final requestBody = {
+        "id_aplicacion": 1,
+        "tipo": "celular",
+        "valor": valor
+      };
       final requestHeaders = {
         "Content-Type": "application/json",
         "auth": _appToken,
