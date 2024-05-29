@@ -43,6 +43,12 @@ class _RedirectTimerState extends State<RedirectTimer> {
 
   @override
   Widget build(BuildContext context) {
-    return Text(_seconds.toString());
+    return Text(
+      _seconds.toString(),
+      style: const TextStyle(
+        fontFamily: 'Nutmeg',
+        fontWeight: FontWeight.w300,
+      ),
+    );
   }
 }

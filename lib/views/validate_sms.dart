@@ -4,23 +4,22 @@ import 'package:boton_ceti/helpers/rebuild_ui.dart';
 import 'package:boton_ceti/models/app_banner.dart';
 import 'package:boton_ceti/models/error_popup_content.dart';
 import 'package:boton_ceti/models/otp_square.dart';
-import 'package:boton_ceti/models/resend_code.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-class ValidateEmail extends StatefulWidget {
-  final String correo;
-  const ValidateEmail({super.key, required this.correo});
+class ValidateSMS extends StatefulWidget {
+  final String cellphone;
+  const ValidateSMS({super.key, required this.cellphone});
 
   @override
-  State<ValidateEmail> createState() => _ValidateEmailState();
+  State<ValidateSMS> createState() => _ValidateSMSState();
 }
 
-class _ValidateEmailState extends State<ValidateEmail> {
+class _ValidateSMSState extends State<ValidateSMS> {
   final GlobalKey<FormState> _keyForm = GlobalKey<FormState>();
   bool hasError = false;
-  final List<TextEditingController> emailValidatorOTP = [
+  final List<TextEditingController> smsValidatorOTP = [
     TextEditingController(),
     TextEditingController(),
     TextEditingController(),
@@ -28,7 +27,7 @@ class _ValidateEmailState extends State<ValidateEmail> {
     TextEditingController(),
     TextEditingController(),
   ];
-  final List<FocusNode> emailValidatorFocusNodes = [
+  final List<FocusNode> smsValidatorFocusNodes = [
     FocusNode(),
     FocusNode(),
     FocusNode(),
@@ -98,11 +97,11 @@ class _ValidateEmailState extends State<ValidateEmail> {
     );
   }
 
-  Future<void> validateEmailCode() async {
+  Future<void> validateCellphoneCode() async {
     final singletonProvider =
         Provider.of<ControllersProvider>(context, listen: false);
     String finalCode = '';
-    for (var code in emailValidatorOTP) {
+    for (var code in smsValidatorOTP) {
       finalCode += code.text;
     }
     // Navigator.of(context).pop(true);
@@ -110,7 +109,7 @@ class _ValidateEmailState extends State<ValidateEmail> {
       return;
     }
     final response = await singletonProvider.usuariosController
-        .verificaValidacionCorreo(widget.correo, finalCode);
+        .verificaValidacionCelular(widget.cellphone, finalCode);
     Future.microtask(
       () => showDialog(
         context: context,
@@ -192,7 +191,7 @@ class _ValidateEmailState extends State<ValidateEmail> {
               width: constraints.maxWidth * 0.18,
               child: FittedBox(
                 child: FloatingActionButton(
-                  onPressed: validateEmailCode,
+                  onPressed: validateCellphoneCode,
                   elevation: 5,
                   backgroundColor: VariablesGlobales.coloresApp[1],
                   child: const Icon(
@@ -224,7 +223,7 @@ class _ValidateEmailState extends State<ValidateEmail> {
                             child: const FittedBox(
                               fit: BoxFit.fitWidth,
                               child: Text(
-                                'Validar correo electrónico',
+                                'Validar número telefónico',
                                 style: TextStyle(
                                   fontFamily: 'Nutmeg',
                                   fontWeight: FontWeight.w500,
@@ -244,7 +243,7 @@ class _ValidateEmailState extends State<ValidateEmail> {
                                 horizontal: 10,
                               ),
                               child: const Text(
-                                'Ingresa el código de un sólo uso que hemos enviado a tu correo electrónico',
+                                'Ingresa el código de un sólo uso que hemos enviado por SMS',
                                 style: TextStyle(
                                   fontFamily: 'Nutmeg',
                                   fontWeight: FontWeight.w500,
@@ -271,51 +270,50 @@ class _ValidateEmailState extends State<ValidateEmail> {
                                 child: OTPSquare(
                                   isFirst: true,
                                   canGoBack: false,
-                                  controller: emailValidatorOTP[0],
-                                  focusNode: emailValidatorFocusNodes[0],
+                                  controller: smsValidatorOTP[0],
+                                  focusNode: smsValidatorFocusNodes[0],
                                 ),
                               ),
                               const SizedBox(width: 1),
                               Expanded(
                                 child: OTPSquare(
-                                  controller: emailValidatorOTP[1],
-                                  focusNode: emailValidatorFocusNodes[1],
+                                  controller: smsValidatorOTP[1],
+                                  focusNode: smsValidatorFocusNodes[1],
                                 ),
                               ),
                               const SizedBox(width: 1),
                               Expanded(
                                 child: OTPSquare(
-                                  controller: emailValidatorOTP[2],
-                                  focusNode: emailValidatorFocusNodes[2],
+                                  controller: smsValidatorOTP[2],
+                                  focusNode: smsValidatorFocusNodes[2],
                                 ),
                               ),
                               const SizedBox(width: 1),
                               Expanded(
                                 child: OTPSquare(
-                                  controller: emailValidatorOTP[3],
-                                  focusNode: emailValidatorFocusNodes[3],
+                                  controller: smsValidatorOTP[3],
+                                  focusNode: smsValidatorFocusNodes[3],
                                 ),
                               ),
                               const SizedBox(width: 1),
                               Expanded(
                                 child: OTPSquare(
-                                  controller: emailValidatorOTP[4],
-                                  focusNode: emailValidatorFocusNodes[4],
+                                  controller: smsValidatorOTP[4],
+                                  focusNode: smsValidatorFocusNodes[4],
                                 ),
                               ),
                               const SizedBox(width: 1),
                               Expanded(
                                 child: OTPSquare(
                                   isLast: true,
-                                  controller: emailValidatorOTP[5],
-                                  focusNode: emailValidatorFocusNodes[5],
+                                  controller: smsValidatorOTP[5],
+                                  focusNode: smsValidatorFocusNodes[5],
                                 ),
                               )
                             ],
                           ),
                         ),
-                      ),
-                      const ResendCode()
+                      )
                     ],
                   ),
                 ),

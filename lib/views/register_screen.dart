@@ -11,10 +11,12 @@ import 'package:boton_ceti/models/error_popup_content.dart';
 import 'package:boton_ceti/models/expansion_tile_builder.dart';
 import 'package:boton_ceti/models/password_conditions.dart';
 import 'package:boton_ceti/models/send_email_code.dart';
+import 'package:boton_ceti/models/send_sms_code.dart';
 import 'package:boton_ceti/models/text_input.dart';
 import 'package:boton_ceti/models/timer.dart';
 import 'package:boton_ceti/views/login.dart';
 import 'package:boton_ceti/views/validate_email.dart';
+import 'package:boton_ceti/views/validate_sms.dart';
 import 'package:crypto/crypto.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -353,6 +355,7 @@ class _RegisterScreenState extends State<RegisterScreen>
 //!Esta función se encarga de darle la funcionabilidad al botón.
   void setAdaptativeButtonFunction(int step) async {
     bool emailValidated = false;
+    bool smsValidated = false;
     if (step == 1 &&
         (_states[step] == StepState.editing ||
             _states[step] == StepState.error)) {
@@ -378,10 +381,24 @@ class _RegisterScreenState extends State<RegisterScreen>
     if (step == 2 &&
         (_states[step] == StepState.editing ||
             _states[step] == StepState.error)) {
-      _states[step] = StepState
-          .complete; //! Aquí se llama a la API para validar el número de celular.
-      setState(() {});
-      return;
+      if (!mounted) return;
+      if (!await showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => SendSMSCode(celular: phoneController.text),
+      )) {
+        return;
+      }
+      Future.microtask(() async {
+        smsValidated = await Navigator.of(context).push(crearRutaNamed(
+            ValidateSMS(cellphone: phoneController.text), 'validateSMS'));
+        if (smsValidated) {
+          _states[step] = StepState.complete;
+        } else {
+          _states[step] = StepState.error;
+        }
+        setState(() {});
+      });
     }
     int currentExpansionTile = step;
     int nextExpansionTile = step + 1;
