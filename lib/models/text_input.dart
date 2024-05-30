@@ -105,6 +105,10 @@ class _TextInputState extends State<TextInput> {
         textCapitalization: TextCapitalization.words,
         keyboardType: widget.keyboardType ?? TextInputType.text,
         decoration: InputDecoration(
+          hintStyle: const TextStyle(
+            fontFamily: 'Nutmeg',
+            fontWeight: FontWeight.w300,
+          ),
           hintText: widget.hintText,
           prefixIcon: Icon(widget.icon),
           border: OutlineInputBorder(

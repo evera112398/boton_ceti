@@ -82,6 +82,10 @@ class _RegisterScreenState extends State<RegisterScreen>
     StepState.disabled,
   ];
 
+  List<String> plantelItems = [];
+
+  String? selectedPlantel;
+
   final FocusNode emailFocusNode = FocusNode();
 
   final FocusNode cellphoneFocusNode = FocusNode();
@@ -108,6 +112,87 @@ class _RegisterScreenState extends State<RegisterScreen>
     'Validar',
     'Siguiente',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..addListener(() async {
+        if (_controller.status == AnimationStatus.dismissed) {
+          showFirstPasswordRequirement = false;
+          setState(() {});
+        }
+        if (_controller.status == AnimationStatus.completed) {
+          _registerScrollController.animateTo(
+              _registerScrollController.position.maxScrollExtent * 1.2,
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.easeInOut);
+        }
+      });
+    agrandar = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.elasticInOut),
+    );
+    _controllerCopy = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..addListener(() {
+        if (_controllerCopy.status == AnimationStatus.dismissed) {
+          showSecondPasswordRequirement = false;
+          setState(() {});
+        }
+        if (_controllerCopy.status == AnimationStatus.completed) {
+          _registerScrollController.animateTo(
+              _registerScrollController.position.maxScrollExtent * 1.2,
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.easeInOut);
+        }
+      });
+    _agrandarCopy = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controllerCopy, curve: Curves.elasticInOut),
+    );
+    passwordFocusNodes[0].addListener(() {
+      if (!passwordFocusNodes[0].hasFocus &&
+          _controller.status == AnimationStatus.completed) {
+        _controller.reverse();
+      }
+    });
+    passwordFocusNodes[1].addListener(() {
+      if (!passwordFocusNodes[1].hasFocus &&
+          _controllerCopy.status == AnimationStatus.completed) {
+        _controllerCopy.reverse();
+      }
+      if (passwordFocusNodes[1].hasFocus) {
+        showSecondPasswordRequirement = true;
+        _controllerCopy.forward();
+        setState(() {});
+      }
+    });
+    getEstablecimientos().whenComplete(() {
+      buildEmailRegexPattern();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _controllerCopy.dispose();
+    super.dispose();
+  }
+
+  Future<void> getEstablecimientos() async {
+    final singletonProvider =
+        Provider.of<ControllersProvider>(context, listen: false);
+    final response =
+        await singletonProvider.usuariosController.getEstablecimientos();
+    if (response['ok']) {
+      for (var plantel in response['payload']) {
+        plantelItems.add(plantel['nombre']);
+      }
+    }
+    setState(() {});
+  }
 
   void buildEmailRegexPattern() {
     String patterns = VariablesGlobales.emailAddressPool.join('|');
@@ -416,72 +501,6 @@ class _RegisterScreenState extends State<RegisterScreen>
   }
 
   @override
-  void initState() {
-    super.initState();
-    buildEmailRegexPattern();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    )..addListener(() async {
-        if (_controller.status == AnimationStatus.dismissed) {
-          showFirstPasswordRequirement = false;
-          setState(() {});
-        }
-        if (_controller.status == AnimationStatus.completed) {
-          _registerScrollController.animateTo(
-              _registerScrollController.position.maxScrollExtent * 1.2,
-              duration: const Duration(milliseconds: 100),
-              curve: Curves.easeInOut);
-        }
-      });
-    agrandar = Tween(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.elasticInOut),
-    );
-    _controllerCopy = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    )..addListener(() {
-        if (_controllerCopy.status == AnimationStatus.dismissed) {
-          showSecondPasswordRequirement = false;
-          setState(() {});
-        }
-        if (_controllerCopy.status == AnimationStatus.completed) {
-          _registerScrollController.animateTo(
-              _registerScrollController.position.maxScrollExtent * 1.2,
-              duration: const Duration(milliseconds: 100),
-              curve: Curves.easeInOut);
-        }
-      });
-    _agrandarCopy = Tween(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controllerCopy, curve: Curves.elasticInOut),
-    );
-    passwordFocusNodes[0].addListener(() {
-      if (!passwordFocusNodes[0].hasFocus &&
-          _controller.status == AnimationStatus.completed) {
-        _controller.reverse();
-      }
-    });
-    passwordFocusNodes[1].addListener(() {
-      if (!passwordFocusNodes[1].hasFocus &&
-          _controllerCopy.status == AnimationStatus.completed) {
-        _controllerCopy.reverse();
-      }
-      if (passwordFocusNodes[1].hasFocus) {
-        showSecondPasswordRequirement = true;
-        _controllerCopy.forward();
-        setState(() {});
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _controllerCopy.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     double remainingHeight =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
@@ -636,6 +655,47 @@ class _RegisterScreenState extends State<RegisterScreen>
                                       },
                                     ),
                                   ),
+                                  Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.grey.shade400,
+                                          width: 1.5,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      margin: const EdgeInsets.symmetric(
+                                        vertical: 5,
+                                        horizontal: 10,
+                                      ),
+                                      width: double.infinity,
+                                      child: DropdownButtonFormField(
+                                        style: const TextStyle(
+                                          fontFamily: 'Nutmeg',
+                                          fontWeight: FontWeight.w300,
+                                          color: Colors.black,
+                                        ),
+                                        borderRadius: BorderRadius.circular(20),
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          prefixIcon: const Icon(
+                                            Icons.house_siding_outlined,
+                                          ),
+                                          prefixIconColor: Colors.grey.shade500,
+                                        ),
+                                        hint: const Text('Plantel:'),
+                                        value: selectedPlantel,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            selectedPlantel = value!;
+                                          });
+                                        },
+                                        items: plantelItems.map((plantel) {
+                                          return DropdownMenuItem(
+                                            value: plantel,
+                                            child: Text(plantel),
+                                          );
+                                        }).toList(),
+                                      )),
                                   const SizedBox(height: 5),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
