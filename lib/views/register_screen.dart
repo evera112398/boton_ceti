@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:boton_ceti/animations/page_animation.dart';
 import 'package:boton_ceti/controllers/controllers_provider.dart';
+import 'package:boton_ceti/data/establecimientos_data.dart';
 import 'package:boton_ceti/data/user_data.dart';
 import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/models/adaptative_button.dart';
@@ -18,8 +19,10 @@ import 'package:boton_ceti/views/login.dart';
 import 'package:boton_ceti/views/validate_email.dart';
 import 'package:boton_ceti/views/validate_sms.dart';
 import 'package:crypto/crypto.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -73,6 +76,7 @@ class _RegisterScreenState extends State<RegisterScreen>
     FocusNode(),
     FocusNode(),
     FocusNode(),
+    FocusNode()
   ];
 
   final List<StepState> _states = [
@@ -82,8 +86,11 @@ class _RegisterScreenState extends State<RegisterScreen>
     StepState.disabled,
   ];
 
+  final List<EstablecimientosData> plantelesData = [];
+
   List<String> plantelItems = [];
 
+  int? selectedEstablecimiento;
   String? selectedPlantel;
 
   final FocusNode emailFocusNode = FocusNode();
@@ -188,6 +195,14 @@ class _RegisterScreenState extends State<RegisterScreen>
         await singletonProvider.usuariosController.getEstablecimientos();
     if (response['ok']) {
       for (var plantel in response['payload']) {
+        plantelesData.add(
+          EstablecimientosData(
+            idEstablecimiento: plantel['id_establecimiento'],
+            nombre: plantel['nombre'],
+            latitud: double.tryParse(plantel['latitud']) ?? 0.0000,
+            longitud: double.tryParse(plantel['longitud']) ?? 0.0000,
+          ),
+        );
         plantelItems.add(plantel['nombre']);
       }
     }
@@ -296,7 +311,7 @@ class _RegisterScreenState extends State<RegisterScreen>
         apellidoMaterno: personalDataControllers[2].text,
         correo: emailController.text,
         celular: phoneController.text,
-        idEstablecimiento: 1,
+        idEstablecimiento: selectedEstablecimiento!,
         password: hashedPassword.toString(),
         acepto: 1,
       );
@@ -439,6 +454,8 @@ class _RegisterScreenState extends State<RegisterScreen>
 
 //!Esta función se encarga de darle la funcionabilidad al botón.
   void setAdaptativeButtonFunction(int step) async {
+    final singletonProvider =
+        Provider.of<ControllersProvider>(context, listen: false);
     bool emailValidated = false;
     bool smsValidated = false;
     if (step == 1 &&
@@ -447,7 +464,14 @@ class _RegisterScreenState extends State<RegisterScreen>
       if (!await showDialog(
         barrierDismissible: false,
         context: context,
-        builder: (context) => SendEmailCode(correo: emailController.text),
+        builder: (context) => SendEmailCode(
+          future: singletonProvider.usuariosController
+              .sendCodigoValidacionCorreo(emailController.text),
+          correo: emailController.text,
+          callback: () {
+            Navigator.of(context).pop(true);
+          },
+        ),
       )) {
         return;
       }
@@ -461,6 +485,7 @@ class _RegisterScreenState extends State<RegisterScreen>
         }
         setState(() {});
       });
+      return;
     }
 
     if (step == 2 &&
@@ -484,6 +509,7 @@ class _RegisterScreenState extends State<RegisterScreen>
         }
         setState(() {});
       });
+      return;
     }
     int currentExpansionTile = step;
     int nextExpansionTile = step + 1;
@@ -651,51 +677,112 @@ class _RegisterScreenState extends State<RegisterScreen>
                                         setState(() {});
                                       },
                                       onFieldSubmited: (value) {
-                                        personalDataFocusNodes[2].unfocus();
+                                        switchFocusNode(
+                                          personalDataFocusNodes[2],
+                                          personalDataFocusNodes[3],
+                                        );
                                       },
                                     ),
                                   ),
                                   Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.grey.shade400,
-                                          width: 1.5,
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 5),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: Theme(
+                                      data: Theme.of(context).copyWith(
+                                        colorScheme:
+                                            ThemeData().colorScheme.copyWith(
+                                                  primary: VariablesGlobales
+                                                      .coloresApp[1],
+                                                ),
+                                      ),
+                                      child: DropdownButtonFormField2(
+                                        focusNode: personalDataFocusNodes[3],
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        isDense: true,
+                                        decoration: InputDecoration(
+                                          contentPadding:
+                                              const EdgeInsetsDirectional
+                                                  .symmetric(
+                                            vertical: 20,
+                                            horizontal: 0,
+                                          ),
+                                          prefixIcon: const Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              FaIcon(
+                                                FontAwesomeIcons.school,
+                                              ),
+                                            ],
+                                          ),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
                                         ),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      margin: const EdgeInsets.symmetric(
-                                        vertical: 5,
-                                        horizontal: 10,
-                                      ),
-                                      width: double.infinity,
-                                      child: DropdownButtonFormField(
+                                        hint: LayoutBuilder(
+                                          builder: (context, constraints) =>
+                                              Text(
+                                            'Plantel:',
+                                            style: TextStyle(
+                                              fontSize:
+                                                  constraints.maxHeight * 0.7,
+                                            ),
+                                          ),
+                                        ),
+                                        value: selectedPlantel,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            selectedPlantel = value!;
+                                            selectedEstablecimiento =
+                                                plantelesData
+                                                    .firstWhere((element) =>
+                                                        element.nombre ==
+                                                        selectedPlantel)
+                                                    .idEstablecimiento;
+                                          });
+                                          validatePersonalData(value!);
+                                        },
+                                        validator: (value) {
+                                          if (value == null) {
+                                            return 'Selecciona un plantel.';
+                                          }
+                                          return null;
+                                        },
+                                        dropdownStyleData: DropdownStyleData(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                        ),
+                                        menuItemStyleData:
+                                            const MenuItemStyleData(
+                                          padding: EdgeInsets.zero,
+                                        ),
                                         style: const TextStyle(
                                           fontFamily: 'Nutmeg',
                                           fontWeight: FontWeight.w300,
                                           color: Colors.black,
                                         ),
-                                        borderRadius: BorderRadius.circular(20),
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          prefixIcon: const Icon(
-                                            Icons.house_siding_outlined,
-                                          ),
-                                          prefixIconColor: Colors.grey.shade500,
-                                        ),
-                                        hint: const Text('Plantel:'),
-                                        value: selectedPlantel,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            selectedPlantel = value!;
-                                          });
-                                        },
                                         items: plantelItems.map((plantel) {
                                           return DropdownMenuItem(
                                             value: plantel,
-                                            child: Text(plantel),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsetsDirectional
+                                                      .only(start: 10),
+                                              child: Text(
+                                                plantel,
+                                              ),
+                                            ),
                                           );
                                         }).toList(),
-                                      )),
+                                      ),
+                                    ),
+                                  ),
                                   const SizedBox(height: 5),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,

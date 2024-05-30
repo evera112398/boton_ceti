@@ -1,7 +1,6 @@
 import 'package:boton_ceti/controllers/controllers_provider.dart';
 import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/services/local_storage.dart';
-import 'package:boton_ceti/views/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';

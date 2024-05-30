@@ -29,9 +29,7 @@ class _NoLocationScreenState extends State<NoLocationScreen> {
           value != LocationPermission.always) {
         await openAppSettings();
       }
-    }).onError((error, stackTrace) async {
-      print('ERROR$error');
-    });
+    }).onError((error, stackTrace) async {});
   }
 
   @override

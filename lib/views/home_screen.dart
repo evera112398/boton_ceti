@@ -30,9 +30,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _nbController = NotchBottomBarController(index: _currentPageIndex);
-    checkInternetConnectivity().whenComplete(() {
-      loadStorage();
-    });
+    checkInternetConnectivity().whenComplete(() {});
     validatePermissions();
   }
 
@@ -62,10 +60,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       _pageController.animateToPage(pageIndex,
           duration: const Duration(milliseconds: 100), curve: Curves.easeInOut);
     });
-  }
-
-  void loadStorage() {
-    print(LocalStorage.prefs);
   }
 
   Future<void> checkInternetConnectivity() async {

@@ -53,6 +53,9 @@ dependencies:
   custom_info_window: ^1.0.1
   clippy_flutter: ^2.0.0-nullsafety.1
   url_launcher: ^6.2.4
+  dropdown_button2: ^2.3.9
+  font_awesome_flutter: ^10.7.0
+  fluttertoast: ^8.2.5
 
 dev_dependencies:
   flutter_test:

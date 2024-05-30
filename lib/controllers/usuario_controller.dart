@@ -17,11 +17,10 @@ class UsuariosController extends ChangeNotifier {
   final String? appId = dotenv.env['ID_APP'];
   final String? keyCipher = dotenv.env['APP_NAME'];
 
-  late String _baseUrl, _appToken, _appId, _key;
+  late String _baseUrl, _appToken, _appId;
   final EncryptionController encryptController = EncryptionController();
 
   UsuariosController() {
-    _key = keyCipher ?? '';
     _baseUrl = encryptController.decrypt(baseUrl);
     _appId = encryptController.decrypt(appId);
     _appToken = encryptController.decrypt(appToken);
@@ -263,6 +262,53 @@ class UsuariosController extends ChangeNotifier {
 
       final resp = await http
           .post(Uri.parse('$_baseUrl/getEstablecimientos'),
+              headers: requestHeaders, body: json.encode(requestBody))
+          .timeout(const Duration(seconds: 30));
+
+      decodeResp = json.decode(resp.body);
+      ok = decodeResp['ok'];
+      if (ok) {
+        return {
+          'ok': ok,
+          'exc': false,
+          'payload': decodeResp['establecimientos']
+        };
+      } else {
+        decodeResp.remove('ok');
+        return {
+          'ok': ok,
+          'exc': false,
+          'payload': decodeResp['message'],
+        };
+      }
+    } on TimeoutException {
+      return _handleError(
+          'El servidor está tardando en responder. Inténtalo de nuevo más tarde.');
+    } on SocketException {
+      return _handleError(
+          'Verifica tu conexión a internet. Inténtalo de nuevo más tarde.');
+    } catch (ex) {
+      return _handleError(
+          'Sucedió un error inesperado. Inténtalo de nuevo más tarde.');
+    }
+  }
+
+  Future<Map<String, dynamic>> recuperarPass(
+      String celular, String correo) async {
+    try {
+      final requestBody = {
+        "id_aplicacion": _appId,
+        "celular": celular,
+        "usuario": correo
+      };
+
+      final requestHeaders = {
+        "Content-Type": "application/json",
+        "auth": _appToken,
+      };
+
+      final resp = await http
+          .post(Uri.parse('$_baseUrl/recuperarPass'),
               headers: requestHeaders, body: json.encode(requestBody))
           .timeout(const Duration(seconds: 30));
 

@@ -6,8 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SendEmailCode extends StatefulWidget {
+  final Function() callback;
+  final Future future;
   final String correo;
-  const SendEmailCode({super.key, required this.correo});
+  const SendEmailCode(
+      {super.key,
+      required this.correo,
+      required this.callback,
+      required this.future});
 
   @override
   State<SendEmailCode> createState() => _SendEmailCodeState();
@@ -17,8 +23,6 @@ class _SendEmailCodeState extends State<SendEmailCode> {
   bool succesfullySent = true;
   @override
   Widget build(BuildContext context) {
-    final singletonProvider =
-        Provider.of<ControllersProvider>(context, listen: false);
     return WillPopScope(
       onWillPop: () async => false,
       child: StatefulBuilder(
@@ -48,8 +52,7 @@ class _SendEmailCodeState extends State<SendEmailCode> {
                   future: Future.delayed(
                     const Duration(seconds: 2),
                   ).then(
-                    (value) => singletonProvider.usuariosController
-                        .sendCodigoValidacionCorreo(widget.correo),
+                    (value) => widget.future,
                   ),
                   builder: (context, AsyncSnapshot snapshot) {
                     if (snapshot.hasError) {
@@ -66,7 +69,7 @@ class _SendEmailCodeState extends State<SendEmailCode> {
                         return ErrorPopupContent(
                             error: snapshot.data['payload']);
                       }
-                      Navigator.of(context).pop(true);
+                      widget.callback();
                     }
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,

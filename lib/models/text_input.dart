@@ -88,6 +88,10 @@ class _TextInputState extends State<TextInput> {
             ),
       ),
       child: TextFormField(
+        style: const TextStyle(
+          fontFamily: 'Nutmeg',
+          fontWeight: FontWeight.w300,
+        ),
         maxLength: widget.maxCharacters,
         maxLengthEnforcement: MaxLengthEnforcement.enforced,
         onTap: widget.onTap,
@@ -107,7 +111,7 @@ class _TextInputState extends State<TextInput> {
         decoration: InputDecoration(
           hintStyle: const TextStyle(
             fontFamily: 'Nutmeg',
-            fontWeight: FontWeight.w300,
+            fontWeight: FontWeight.w100,
           ),
           hintText: widget.hintText,
           prefixIcon: Icon(widget.icon),
@@ -115,6 +119,10 @@ class _TextInputState extends State<TextInput> {
             borderRadius: BorderRadius.circular(10),
           ),
           labelText: widget.hintText,
+          labelStyle: const TextStyle(
+            fontFamily: 'Nutmeg',
+            fontWeight: FontWeight.w100,
+          ),
           suffixIcon: widget.isPassword
               ? isIconVisible
                   ? IconButton(

@@ -5,6 +5,7 @@ import 'package:boton_ceti/models/app_banner.dart';
 import 'package:boton_ceti/models/error_popup_content.dart';
 import 'package:boton_ceti/models/text_input.dart';
 import 'package:boton_ceti/views/home_screen.dart';
+import 'package:boton_ceti/views/recover_password.dart';
 import 'package:boton_ceti/views/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -335,14 +336,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                         child: FittedBox(
                                           child: Row(
                                             children: [
-                                              Text(
-                                                'Olvidé mi contraseña.',
-                                                style: TextStyle(
-                                                  fontFamily: 'Nutmeg',
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                  color: VariablesGlobales
-                                                      .coloresApp[1],
+                                              GestureDetector(
+                                                onTap: () =>
+                                                    Navigator.of(context).push(
+                                                  crearRutaNamed(
+                                                      const RecoverPassword(),
+                                                      'recoverPassword'),
+                                                ),
+                                                child: Text(
+                                                  'Olvidé mi contraseña.',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Nutmeg',
+                                                    decoration: TextDecoration
+                                                        .underline,
+                                                    color: VariablesGlobales
+                                                        .coloresApp[1],
+                                                  ),
                                                 ),
                                               ),
                                             ],

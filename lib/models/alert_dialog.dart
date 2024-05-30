@@ -48,21 +48,21 @@ class _StartAlertDialogState extends State<StartAlertDialog> {
       }
       _stateController.add(LocationCheckState.validatingPosition);
       await Future.delayed(const Duration(seconds: 1));
-      // _isWithinPolygon = await fallsWithinBounds(userPosition!);
-      _isWithinPolygon = await fallsWithinBounds(
-        Position(
-          longitude: VariablesGlobales.buildingsLatLng['Colomos']!.longitude,
-          latitude: VariablesGlobales.buildingsLatLng['Colomos']!.latitude,
-          timestamp: DateTime.now(),
-          accuracy: 0.0,
-          altitude: 0.0,
-          altitudeAccuracy: 0.0,
-          heading: 0.0,
-          headingAccuracy: 0.0,
-          speed: 0.0,
-          speedAccuracy: 0.0,
-        ),
-      );
+      _isWithinPolygon = await fallsWithinBounds(userPosition!);
+      // _isWithinPolygon = await fallsWithinBounds(
+      //   Position(
+      //     longitude: VariablesGlobales.buildingsLatLng['Colomos']!.longitude,
+      //     latitude: VariablesGlobales.buildingsLatLng['Colomos']!.latitude,
+      //     timestamp: DateTime.now(),
+      //     accuracy: 0.0,
+      //     altitude: 0.0,
+      //     altitudeAccuracy: 0.0,
+      //     heading: 0.0,
+      //     headingAccuracy: 0.0,
+      //     speed: 0.0,
+      //     speedAccuracy: 0.0,
+      //   ),
+      // );
       if (!_isWithinPolygon) {
         _errorMessage = 'No te encuentras dentro de ninguno de los planteles.';
         _stateController.add(LocationCheckState.error);
@@ -101,23 +101,23 @@ class _StartAlertDialogState extends State<StartAlertDialog> {
                     'Validando ubicación...'); //? Se valida la ubicación del dispositivo.
           } else if (snapshot.data == LocationCheckState.completed) {
             Navigator.of(context).pop();
-            // widget.callback(userPosition!);
-            widget.callback(
-              Position(
-                longitude:
-                    VariablesGlobales.buildingsLatLng['Colomos']!.longitude,
-                latitude:
-                    VariablesGlobales.buildingsLatLng['Colomos']!.latitude,
-                timestamp: DateTime.now(),
-                accuracy: 0.0,
-                altitude: 0.0,
-                altitudeAccuracy: 0.0,
-                heading: 0.0,
-                headingAccuracy: 0.0,
-                speed: 0.0,
-                speedAccuracy: 0.0,
-              ),
-            );
+            widget.callback(userPosition!);
+            // widget.callback(
+            //   Position(
+            //     longitude:
+            //         VariablesGlobales.buildingsLatLng['Colomos']!.longitude,
+            //     latitude:
+            //         VariablesGlobales.buildingsLatLng['Colomos']!.latitude,
+            //     timestamp: DateTime.now(),
+            //     accuracy: 0.0,
+            //     altitude: 0.0,
+            //     altitudeAccuracy: 0.0,
+            //     heading: 0.0,
+            //     headingAccuracy: 0.0,
+            //     speed: 0.0,
+            //     speedAccuracy: 0.0,
+            //   ),
+            // );
             return Container();
           } else if (snapshot.data == LocationCheckState.error) {
             return DynamicAlertDialog(

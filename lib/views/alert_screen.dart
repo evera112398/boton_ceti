@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:boton_ceti/controllers/controllers_provider.dart';
 import 'package:boton_ceti/data/alerts_data.dart';
 import 'package:boton_ceti/global/global_vars.dart';
+import 'package:boton_ceti/helpers/rebuild_ui.dart';
 import 'package:boton_ceti/models/alert_card.dart';
 import 'package:boton_ceti/models/app_banner.dart';
 import 'package:boton_ceti/services/local_storage.dart';
@@ -17,6 +18,9 @@ class AlertScreen extends StatefulWidget {
 }
 
 class _AlertScreenState extends State<AlertScreen> {
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey<AnimatedListState> profilesKey =
+      GlobalKey<AnimatedListState>();
   late List<AlertData> alerts = [];
   bool pageLoaded = false;
 
@@ -43,18 +47,24 @@ class _AlertScreenState extends State<AlertScreen> {
 
   void populateUserProfilesCard() {
     final alertString = json.decode(LocalStorage.userProfiles!);
-    alertString.forEach(
-      (alertObject) => {
-        alerts.add(
-          AlertData(
-            alertTitle: alertObject['alertTitle'],
-            alertText: alertObject['alertText'],
-            resourcePath: alertObject['resourcePath'],
-            alertId: alertObject['alertId'],
-          ),
-        )
-      },
-    );
+    int totalInsertions = alertString.length;
+    var future = Future(() {});
+    for (var i = 0; i < totalInsertions; i++) {
+      future = future.then((value) {
+        return Future.delayed(const Duration(milliseconds: 100), () async {
+          alerts.add(
+            AlertData(
+              alertTitle: alertString[i]['alertTitle'],
+              alertText: alertString[i]['alertText'],
+              resourcePath: alertString[i]['resourcePath'],
+              alertId: alertString[i]['alertId'],
+            ),
+          );
+          profilesKey.currentState!.insertItem(i);
+        });
+      });
+    }
+    RebuildUI.rebuild(context, setState);
   }
 
   @override
@@ -83,30 +93,36 @@ class _AlertScreenState extends State<AlertScreen> {
                       Expanded(
                         child: LayoutBuilder(
                           builder: (context, constraints) {
-                            return Container(
-                              padding: const EdgeInsets.all(12),
-                              child: SingleChildScrollView(
-                                physics: const BouncingScrollPhysics(),
-                                child: Column(
-                                  children: alerts
-                                      .map(
-                                        (e) => Column(
-                                          children: [
-                                            AlertCard(
-                                              alertIcon: Icons.copy,
-                                              containerHeight:
-                                                  constraints.maxHeight,
-                                              alertData: e,
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            )
-                                          ],
+                            return AnimatedList(
+                              initialItemCount: alerts.length,
+                              controller: _scrollController,
+                              key: profilesKey,
+                              physics: const BouncingScrollPhysics(),
+                              itemBuilder: (context, index, animation) {
+                                return SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: const Offset(0.0, 1.0),
+                                    end: const Offset(0.0, 0.0),
+                                  ).animate(animation),
+                                  key: UniqueKey(),
+                                  child: SingleChildScrollView(
+                                    physics: const BouncingScrollPhysics(),
+                                    child: Column(
+                                      children: [
+                                        AlertCard(
+                                          alertIcon: Icons.copy,
+                                          containerHeight:
+                                              constraints.maxHeight,
+                                          alertData: alerts[index],
                                         ),
-                                      )
-                                      .toList(),
-                                ),
-                              ),
+                                        const SizedBox(
+                                          height: 10,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
                             );
                           },
                         ),

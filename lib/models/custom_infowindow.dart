@@ -34,31 +34,27 @@ class CustomInfoWindowMap extends StatelessWidget {
                   children: [
                     Expanded(
                       flex: 1,
-                      child: Container(
-                        child: Image.asset(
-                          VariablesGlobales.placeholderImage,
-                        ),
+                      child: Image.asset(
+                        VariablesGlobales.placeholderImage,
                       ),
                     ),
                     Expanded(
                       flex: 2,
-                      child: Container(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                title,
-                                softWrap: true,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Nutmeg',
-                                ),
-                                textAlign: TextAlign.center,
-                              )
-                            ],
-                          ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              title,
+                              softWrap: true,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Nutmeg',
+                              ),
+                              textAlign: TextAlign.center,
+                            )
+                          ],
                         ),
                       ),
                     ),

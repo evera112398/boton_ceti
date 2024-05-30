@@ -20,11 +20,10 @@ class LoginController extends ChangeNotifier {
   final String? appId = dotenv.env['ID_APP'];
   final String? keyCipher = dotenv.env['APP_NAME'];
 
-  late String _baseUrl, _appToken, _appId, _key;
+  late String _baseUrl, _appToken, _appId;
   final EncryptionController encryptController = EncryptionController();
 
   LoginController() {
-    _key = keyCipher ?? '';
     _baseUrl = encryptController.decrypt(baseUrl);
     _appId = encryptController.decrypt(appId);
     _appToken = encryptController.decrypt(appToken);

@@ -18,23 +18,23 @@ class AlertasController extends ChangeNotifier {
   final String? appId = dotenv.env['ID_APP'];
   final String? keyCipher = dotenv.env['APP_NAME'];
 
-  late String _baseUrl, _appToken, _appId, _key;
+  late String _baseUrl, _appToken, _appId;
   final EncryptionController encryptController = EncryptionController();
 
   AlertasController() {
-    _key = keyCipher ?? '';
     _baseUrl = encryptController.decrypt(baseUrl);
     _appId = encryptController.decrypt(appId);
     _appToken = encryptController.decrypt(appToken);
   }
 
-  Future<Map<String, dynamic>> createAlerta(LatLng coordinatesAlerta) async {
+  Future<Map<String, dynamic>> createAlerta(
+      LatLng coordinatesAlerta, int establishmentId, int alertId) async {
     try {
       final requestBody = {
         "id_usuario": LocalStorage.idUsuario,
-        // "id_usuario": 1,
         "id_aplicacion": _appId,
-        "tipo_alerta": 1,
+        "tipo_alerta": alertId,
+        "id_establecimiento": establishmentId,
         "latitud": coordinatesAlerta.latitude,
         "longitud": coordinatesAlerta.longitude
       };

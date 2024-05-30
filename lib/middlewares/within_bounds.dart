@@ -1,5 +1,6 @@
 import 'package:boton_ceti/global/coordinate_conversor.dart';
 import 'package:boton_ceti/global/global_vars.dart';
+import 'package:boton_ceti/services/local_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maps_toolkit/maps_toolkit.dart';
 
@@ -18,9 +19,18 @@ Future<bool> fallsWithinBounds(Position userPosition) async {
     var polygon = entry.value;
     if (PolygonUtil.containsLocation(
         actualLocation, castCoordinates(polygon), true)) {
-      // print(identifier); //? Imprime el plantel donde se emitió la alarma.
+      LocalStorage.establishmentId = getEstablishmentId(entry.key);
       return true;
     }
   }
   return false;
+}
+
+int getEstablishmentId(String identifier) {
+  if (identifier == VariablesGlobales.planteles[0]) {
+    return 2;
+  } else if (identifier == VariablesGlobales.planteles[1]) {
+    return 1;
+  }
+  return 3;
 }

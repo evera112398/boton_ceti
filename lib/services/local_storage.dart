@@ -226,4 +226,15 @@ class LocalStorage {
   static set locationEnabled(bool? val) {
     prefs.setBool('location_enabled', val!);
   }
+
+  static int? get establishmentId {
+    if (prefs.getInt('establishment_id') != null) {
+      return prefs.getInt('establishment_id');
+    }
+    return null;
+  }
+
+  static set establishmentId(int? val) {
+    prefs.setInt('establishment_id', val!);
+  }
 }

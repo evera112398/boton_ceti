@@ -315,7 +315,10 @@ class _ValidateEmailState extends State<ValidateEmail> {
                           ),
                         ),
                       ),
-                      const ResendCode()
+                      ResendCode(
+                        valor: widget.correo,
+                        tipo: 'Correo',
+                      )
                     ],
                   ),
                 ),

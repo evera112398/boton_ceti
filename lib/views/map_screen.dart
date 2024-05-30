@@ -9,6 +9,7 @@ import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/models/alert_data.dart';
 import 'package:boton_ceti/models/dynamic_alert_dialog.dart';
 import 'package:boton_ceti/models/error_popup_content.dart';
+import 'package:boton_ceti/services/local_storage.dart';
 import 'package:boton_ceti/views/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,6 +39,7 @@ class MapScreenState extends State<MapScreen> {
   late Position _currentPosition;
   late BitmapDescriptor customIcon;
   final Map<String, Marker> _markers = {};
+  late int establishmentId;
   bool alertGenerated = false;
   String? folio;
   Image? alertLocalImage;
@@ -45,6 +47,8 @@ class MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
+    establishmentId = LocalStorage.establishmentId!;
+    LocalStorage.establishmentId = 0;
     _currentPosition = widget.alertPosition!;
     alertLocalImage =
         widget.alertImage ?? Image.asset(VariablesGlobales.placeholderImage);
@@ -73,7 +77,10 @@ class MapScreenState extends State<MapScreen> {
     final singletonProvider =
         Provider.of<ControllersProvider>(context, listen: false);
     final response = await singletonProvider.alertasController.createAlerta(
-        LatLng(_currentPosition.latitude, _currentPosition.longitude));
+      LatLng(_currentPosition.latitude, _currentPosition.longitude),
+      establishmentId,
+      widget.alertData!.alertId,
+    );
     if (response['ok']) {
       alertGenerated = true;
       folio = response['payload'];
