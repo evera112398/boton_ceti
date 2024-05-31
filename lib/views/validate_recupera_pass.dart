@@ -1,3 +1,4 @@
+import 'package:boton_ceti/animations/page_animation.dart';
 import 'package:boton_ceti/controllers/controllers_provider.dart';
 import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/helpers/rebuild_ui.dart';
@@ -5,19 +6,23 @@ import 'package:boton_ceti/models/app_banner.dart';
 import 'package:boton_ceti/models/error_popup_content.dart';
 import 'package:boton_ceti/models/otp_square.dart';
 import 'package:boton_ceti/models/resend_code.dart';
+import 'package:boton_ceti/views/change_password.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-class ValidateEmail extends StatefulWidget {
+class ValidateRecuperaPass extends StatefulWidget {
+  final int idUsuario;
   final String correo;
-  const ValidateEmail({super.key, required this.correo});
+  const ValidateRecuperaPass(
+      {super.key, required this.idUsuario, required this.correo});
 
   @override
-  State<ValidateEmail> createState() => _ValidateEmailState();
+  State<ValidateRecuperaPass> createState() => _ValidateRecuperaPassState();
 }
 
-class _ValidateEmailState extends State<ValidateEmail> {
+class _ValidateRecuperaPassState extends State<ValidateRecuperaPass> {
   final GlobalKey<FormState> _keyForm = GlobalKey<FormState>();
   bool hasError = false;
   final List<TextEditingController> emailValidatorOTP = [
@@ -109,9 +114,9 @@ class _ValidateEmailState extends State<ValidateEmail> {
       return;
     }
     final response =
-        await singletonProvider.usuariosController.verificaValidacionCorreo(
-      widget.correo,
+        await singletonProvider.usuariosController.validaRecuperarPass(
       finalCode,
+      widget.idUsuario,
     );
     Future.microtask(
       () => showDialog(
@@ -152,7 +157,18 @@ class _ValidateEmailState extends State<ValidateEmail> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   if (!hasError) {
-                    Navigator.of(context).pop(true);
+                    SchedulerBinding.instance.addPostFrameCallback(
+                      (_) {
+                        Navigator.of(context).push(
+                          crearRutaNamed(
+                              ChangePasswordView(
+                                codigo: finalCode,
+                                idUsuario: widget.idUsuario,
+                              ),
+                              'changePassword'),
+                        );
+                      },
+                    );
                   }
                 },
                 child: const Text(

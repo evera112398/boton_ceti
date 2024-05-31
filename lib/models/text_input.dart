@@ -1,6 +1,7 @@
 import 'package:boton_ceti/global/global_vars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TextInput extends StatefulWidget {
   final TextEditingController controller;
@@ -11,16 +12,19 @@ class TextInput extends StatefulWidget {
   final void Function(String?)? onFieldSubmited;
   final TextInputType? keyboardType;
   final String hintText;
-  final IconData icon;
+  final IconData? icon;
   final bool isPassword;
   final FocusNode focusNode;
   final int? maxCharacters;
+  final FaIcon? fontAwesomeIcon;
+  final bool readOnly;
+  final bool enabled;
   const TextInput({
     super.key,
     required this.controller,
     required this.autofillHints,
     required this.hintText,
-    required this.icon,
+    this.icon,
     this.validator,
     this.keyboardType,
     this.isPassword = false,
@@ -29,6 +33,9 @@ class TextInput extends StatefulWidget {
     required this.focusNode,
     this.maxCharacters,
     this.onFieldSubmited,
+    this.fontAwesomeIcon,
+    this.readOnly = false,
+    this.enabled = true,
   });
 
   @override
@@ -50,6 +57,7 @@ class _TextInputState extends State<TextInput> {
           isIconVisible = true;
         }
       }
+      if (!mounted) return;
       setState(() {});
     });
     widget.controller.addListener(() {
@@ -57,6 +65,7 @@ class _TextInputState extends State<TextInput> {
       if (widget.controller.text.isNotEmpty) {
         isIconVisible = true;
       }
+      if (!mounted) return;
       setState(() {});
     });
     super.initState();
@@ -88,6 +97,7 @@ class _TextInputState extends State<TextInput> {
             ),
       ),
       child: TextFormField(
+        enabled: widget.enabled,
         style: const TextStyle(
           fontFamily: 'Nutmeg',
           fontWeight: FontWeight.w300,
@@ -114,7 +124,16 @@ class _TextInputState extends State<TextInput> {
             fontWeight: FontWeight.w100,
           ),
           hintText: widget.hintText,
-          prefixIcon: Icon(widget.icon),
+          prefixIcon: widget.fontAwesomeIcon != null
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    widget.fontAwesomeIcon!,
+                    const SizedBox(height: 5),
+                  ],
+                )
+              : Icon(widget.icon),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -137,6 +156,7 @@ class _TextInputState extends State<TextInput> {
               : null,
         ),
         onFieldSubmitted: widget.onFieldSubmited,
+        readOnly: widget.readOnly,
       ),
     );
   }

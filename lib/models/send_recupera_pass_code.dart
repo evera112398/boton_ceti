@@ -1,19 +1,27 @@
+import 'package:boton_ceti/animations/page_animation.dart';
 import 'package:boton_ceti/controllers/controllers_provider.dart';
 import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/helpers/rebuild_ui.dart';
 import 'package:boton_ceti/models/error_popup_content.dart';
+import 'package:boton_ceti/views/validate_recupera_pass.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
-class SendEmailCode extends StatefulWidget {
-  final String correo;
-  const SendEmailCode({super.key, required this.correo});
+class SendRecuperaPassCode extends StatefulWidget {
+  final String usuario;
+  final String celular;
+  const SendRecuperaPassCode({
+    super.key,
+    required this.usuario,
+    required this.celular,
+  });
 
   @override
-  State<SendEmailCode> createState() => _SendEmailCodeState();
+  State<SendRecuperaPassCode> createState() => _SendRecuperaPassCodeState();
 }
 
-class _SendEmailCodeState extends State<SendEmailCode> {
+class _SendRecuperaPassCodeState extends State<SendRecuperaPassCode> {
   bool succesfullySent = true;
   @override
   Widget build(BuildContext context) {
@@ -48,8 +56,11 @@ class _SendEmailCodeState extends State<SendEmailCode> {
                   future: Future.delayed(
                     const Duration(seconds: 2),
                   ).then(
-                    (value) => singletonProvider.usuariosController
-                        .sendCodigoValidacionCorreo(widget.correo),
+                    (value) =>
+                        singletonProvider.usuariosController.recuperarPass(
+                      widget.celular,
+                      widget.usuario,
+                    ),
                   ),
                   builder: (context, AsyncSnapshot snapshot) {
                     if (snapshot.hasError) {
@@ -66,7 +77,19 @@ class _SendEmailCodeState extends State<SendEmailCode> {
                         return ErrorPopupContent(
                             error: snapshot.data['payload']);
                       }
-                      Navigator.of(context).pop(true);
+                      Navigator.of(context).pop();
+
+                      SchedulerBinding.instance.addPostFrameCallback((_) {
+                        Navigator.of(context).push(
+                          crearRutaNamed(
+                            ValidateRecuperaPass(
+                              idUsuario: snapshot.data['payload'],
+                              correo: widget.usuario,
+                            ),
+                            'sendRecuperaPassCode',
+                          ),
+                        );
+                      });
                     }
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,

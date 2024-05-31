@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:boton_ceti/controllers/encryption_controller.dart';
 import 'package:boton_ceti/data/user_data.dart';
+import 'package:boton_ceti/services/local_storage.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -315,11 +317,144 @@ class UsuariosController extends ChangeNotifier {
       decodeResp = json.decode(resp.body);
       ok = decodeResp['ok'];
       if (ok) {
+        return {'ok': ok, 'exc': false, 'payload': decodeResp['id_usuario']};
+      } else {
+        decodeResp.remove('ok');
         return {
           'ok': ok,
           'exc': false,
-          'payload': decodeResp['establecimientos']
+          'payload': decodeResp['message'],
         };
+      }
+    } on TimeoutException {
+      return _handleError(
+          'El servidor está tardando en responder. Inténtalo de nuevo más tarde.');
+    } on SocketException {
+      return _handleError(
+          'Verifica tu conexión a internet. Inténtalo de nuevo más tarde.');
+    } catch (ex) {
+      return _handleError(
+          'Sucedió un error inesperado. Inténtalo de nuevo más tarde.');
+    }
+  }
+
+  Future<Map<String, dynamic>> validaRecuperarPass(
+      String codigo, int idUsuario) async {
+    try {
+      final requestBody = {
+        "id_aplicacion": _appId,
+        "id_usuario": idUsuario,
+        "codigo": codigo,
+      };
+
+      final requestHeaders = {
+        "Content-Type": "application/json",
+        "auth": _appToken,
+      };
+
+      final resp = await http
+          .post(Uri.parse('$_baseUrl/validaRecuperarPass'),
+              headers: requestHeaders, body: json.encode(requestBody))
+          .timeout(const Duration(seconds: 30));
+
+      decodeResp = json.decode(resp.body);
+      ok = decodeResp['ok'];
+      if (ok) {
+        return {
+          'ok': ok,
+          'exc': false,
+        };
+      } else {
+        decodeResp.remove('ok');
+        return {
+          'ok': ok,
+          'exc': false,
+          'payload': decodeResp['message'],
+        };
+      }
+    } on TimeoutException {
+      return _handleError(
+          'El servidor está tardando en responder. Inténtalo de nuevo más tarde.');
+    } on SocketException {
+      return _handleError(
+          'Verifica tu conexión a internet. Inténtalo de nuevo más tarde.');
+    } catch (ex) {
+      return _handleError(
+          'Sucedió un error inesperado. Inténtalo de nuevo más tarde.');
+    }
+  }
+
+  Future<Map<String, dynamic>> updateRecuperarPass(
+      String codigo, int idUsuario, String password) async {
+    try {
+      final passToHash = utf8.encode(password);
+      final hashedPassword = sha512.convert(passToHash);
+      final requestBody = {
+        "id_aplicacion": _appId,
+        "id_usuario": idUsuario,
+        "codigo": codigo,
+        "password": hashedPassword.toString()
+      };
+
+      final requestHeaders = {
+        "Content-Type": "application/json",
+        "auth": _appToken,
+      };
+
+      final resp = await http
+          .post(Uri.parse('$_baseUrl/updateRecuperarPass'),
+              headers: requestHeaders, body: json.encode(requestBody))
+          .timeout(const Duration(seconds: 30));
+
+      decodeResp = json.decode(resp.body);
+      ok = decodeResp['ok'];
+      if (ok) {
+        return {
+          'ok': ok,
+          'exc': false,
+        };
+      } else {
+        decodeResp.remove('ok');
+        return {
+          'ok': ok,
+          'exc': false,
+          'payload': decodeResp['message'],
+        };
+      }
+    } on TimeoutException {
+      return _handleError(
+          'El servidor está tardando en responder. Inténtalo de nuevo más tarde.');
+    } on SocketException {
+      return _handleError(
+          'Verifica tu conexión a internet. Inténtalo de nuevo más tarde.');
+    } catch (ex) {
+      return _handleError(
+          'Sucedió un error inesperado. Inténtalo de nuevo más tarde.');
+    }
+  }
+
+  Future<Map<String, dynamic>> getUsuario() async {
+    try {
+      final requestBody = {
+        "id_usuario": LocalStorage.idUsuario,
+        "id_aplicacion": _appId,
+      };
+
+      final requestHeaders = {
+        "Content-Type": "application/json",
+        "auth": _appToken,
+        "token": LocalStorage.tokenUsuario!
+      };
+
+      final resp = await http
+          .post(Uri.parse('$_baseUrl/getUsuario'),
+              headers: requestHeaders, body: json.encode(requestBody))
+          .timeout(const Duration(seconds: 30));
+
+      decodeResp = json.decode(resp.body);
+      ok = decodeResp['ok'];
+      if (ok) {
+        return {'ok': ok, 'exc': false, 'payload': decodeResp['usuario']};
       } else {
         decodeResp.remove('ok');
         return {

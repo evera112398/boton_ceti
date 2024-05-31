@@ -7,6 +7,7 @@ class DynamicAlertDialog extends StatelessWidget {
   final MainAxisAlignment? actionsAlignment;
   final bool? isErrorDialog;
   final bool? isSuccessDialog;
+  final double? givedHeight;
   const DynamicAlertDialog({
     super.key,
     this.alertTitle,
@@ -15,6 +16,7 @@ class DynamicAlertDialog extends StatelessWidget {
     this.isSuccessDialog,
     this.actions,
     this.actionsAlignment,
+    this.givedHeight,
   });
 
   @override
@@ -32,7 +34,7 @@ class DynamicAlertDialog extends StatelessWidget {
           var width = MediaQuery.of(context).size.width;
           var height = MediaQuery.of(context).size.height;
           return SizedBox(
-            height: height * 0.3,
+            height: givedHeight ?? height * 0.3,
             width: width,
             child: LayoutBuilder(
               builder: (context, constraints) {

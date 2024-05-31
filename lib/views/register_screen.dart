@@ -454,8 +454,6 @@ class _RegisterScreenState extends State<RegisterScreen>
 
 //!Esta función se encarga de darle la funcionabilidad al botón.
   void setAdaptativeButtonFunction(int step) async {
-    final singletonProvider =
-        Provider.of<ControllersProvider>(context, listen: false);
     bool emailValidated = false;
     bool smsValidated = false;
     if (step == 1 &&
@@ -465,12 +463,7 @@ class _RegisterScreenState extends State<RegisterScreen>
         barrierDismissible: false,
         context: context,
         builder: (context) => SendEmailCode(
-          future: singletonProvider.usuariosController
-              .sendCodigoValidacionCorreo(emailController.text),
           correo: emailController.text,
-          callback: () {
-            Navigator.of(context).pop(true);
-          },
         ),
       )) {
         return;

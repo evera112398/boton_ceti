@@ -1,13 +1,11 @@
-import 'package:boton_ceti/controllers/controllers_provider.dart';
 import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/models/app_banner.dart';
-import 'package:boton_ceti/models/send_email_code.dart';
+import 'package:boton_ceti/models/send_recupera_pass_code.dart';
 import 'package:boton_ceti/models/text_input.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 
 class RecoverPassword extends StatefulWidget {
   const RecoverPassword({super.key});
@@ -18,11 +16,13 @@ class RecoverPassword extends StatefulWidget {
 
 class _RecoverPasswordState extends State<RecoverPassword> {
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController cellphoneController = TextEditingController();
   final FocusNode emailFocusNode = FocusNode();
+  final FocusNode cellphoneFocusNode = FocusNode();
   final GlobalKey<FormState> _form = GlobalKey<FormState>();
   late RegExp emailRegex;
   String emailRegexPool = '';
-  bool sendEmailButtonEnabled = false;
+  bool sendButtonEnabled = false;
 
   @override
   void initState() {
@@ -31,19 +31,12 @@ class _RecoverPasswordState extends State<RecoverPassword> {
   }
 
   void sendCode() async {
-    final singletonProvider =
-        Provider.of<ControllersProvider>(context, listen: false);
     await showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (context) => SendEmailCode(
-        future: singletonProvider.usuariosController
-            .recuperarPass('3337798743', emailController.text),
-        correo: emailController.text,
-        callback: () {
-          Navigator.of(context).pop();
-          print('Correo enviado');
-        },
+      builder: (context) => SendRecuperaPassCode(
+        usuario: emailController.text,
+        celular: cellphoneController.text,
       ),
     );
   }
@@ -55,10 +48,10 @@ class _RecoverPasswordState extends State<RecoverPassword> {
     setState(() {});
   }
 
-  void validateEmail(String data) {
-    sendEmailButtonEnabled = false;
+  void validateForm(String data) {
+    sendButtonEnabled = false;
     if (_form.currentState!.validate()) {
-      sendEmailButtonEnabled = true;
+      sendButtonEnabled = true;
     }
     setState(() {});
   }
@@ -120,7 +113,7 @@ class _RecoverPasswordState extends State<RecoverPassword> {
                                 ),
                                 padding: const EdgeInsets.all(10),
                                 child: const Text(
-                                  'Si tu correo electrónico coincide con alguno en nuestro registro, se te enviará un código para poder recuperar tu contraseña.',
+                                  'Ingresa los datos solicitados a continuación para poder cambiar tu contraseña.',
                                   softWrap: true,
                                   style: TextStyle(
                                     fontFamily: 'Nutmeg',
@@ -168,7 +161,38 @@ class _RecoverPasswordState extends State<RecoverPassword> {
                                         }
                                         return null;
                                       },
-                                      onChanged: (data) => validateEmail(data!),
+                                      onChanged: (data) => validateForm(data!),
+                                      onFieldSubmited: (value) => {
+                                        emailFocusNode.unfocus(),
+                                        cellphoneFocusNode.requestFocus()
+                                      },
+                                    ),
+                                    const SizedBox(height: 10),
+                                    TextInput(
+                                      maxCharacters: 10,
+                                      focusNode: cellphoneFocusNode,
+                                      keyboardType: TextInputType.phone,
+                                      controller: cellphoneController,
+                                      autofillHints: const [
+                                        AutofillHints.telephoneNumber
+                                      ],
+                                      hintText: 'Celular:',
+                                      icon: Icons.phone,
+                                      validator: (value) {
+                                        if (value!.isEmpty ||
+                                            !VariablesGlobales
+                                                .expresionesRegulares[1]
+                                                .hasMatch(value)) {
+                                          return "Ingresa un número de teléfono válido";
+                                        }
+                                        return null;
+                                      },
+                                      onChanged: (data) => validateForm(data!),
+                                      onTap: () {
+                                        cellphoneFocusNode.requestFocus();
+
+                                        setState(() {});
+                                      },
                                     ),
                                     const SizedBox(height: 10),
                                     Row(
@@ -189,7 +213,7 @@ class _RecoverPasswordState extends State<RecoverPassword> {
                                                     VariablesGlobales
                                                         .coloresApp[1],
                                               ),
-                                              onPressed: sendEmailButtonEnabled
+                                              onPressed: sendButtonEnabled
                                                   ? sendCode
                                                   : null,
                                               child: const Text(
