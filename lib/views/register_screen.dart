@@ -356,7 +356,7 @@ class _RegisterScreenState extends State<RegisterScreen>
         celular: phoneController.text,
         idEstablecimiento: selectedEstablecimiento!,
         password: hashedPassword.toString(),
-        acepto: 1,
+        acepto: acepto ? 1 : 0,
       );
       final response =
           await singletonProvider.usuariosController.createUsuario(newUser);
