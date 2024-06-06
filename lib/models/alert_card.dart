@@ -49,6 +49,9 @@ class _AlertCardState extends State<AlertCard> {
       context: context,
       builder: (context) {
         return StartAlertDialog(
+          imagePath: imageAsset!,
+          alertTitle: widget.alertData.alertTitle,
+          alertDescription: widget.alertData.alertText,
           callback: (userPosition) {
             Future.microtask(
               () => Navigator.of(context).push(

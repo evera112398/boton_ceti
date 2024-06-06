@@ -126,7 +126,7 @@ class _AlertScreenState extends State<AlertScreen> {
                             );
                           },
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),

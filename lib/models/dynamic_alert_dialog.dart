@@ -22,6 +22,18 @@ class DynamicAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            alertTitle ?? '',
+            style: const TextStyle(
+              fontFamily: 'Nutmeg',
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+        ],
+      ),
       contentPadding: EdgeInsets.zero,
       insetPadding: const EdgeInsets.symmetric(horizontal: 10),
       shape: const RoundedRectangleBorder(

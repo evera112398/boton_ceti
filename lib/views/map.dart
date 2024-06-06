@@ -347,8 +347,10 @@ class _MapState extends State<Map> {
                 )
               ],
             )
-          : const Center(
-              child: CircularProgressIndicator(),
+          : Center(
+              child: CircularProgressIndicator(
+                color: VariablesGlobales.coloresApp[1],
+              ),
             ),
     );
   }

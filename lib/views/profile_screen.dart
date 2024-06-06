@@ -131,7 +131,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         GestureDetector(
                           onTap: () => Navigator.of(context).push(
                             crearRutaNamed(
-                                const EditProfileScreen(), 'editProfile'),
+                              const EditProfileScreen(),
+                              'editProfile',
+                            ),
                           ),
                           child: const ListElement(
                               icon: Icons.person,

@@ -95,6 +95,13 @@ class LocalStorage {
     location = true;
   }
 
+  static void printPreferences() {
+    final keys = prefs.getKeys();
+    for (String key in keys) {
+      print('$key: ${prefs.get(key)}');
+    }
+  }
+
   static int? get idUsuario {
     if (prefs.getInt('idUsuario') != null) {
       return prefs.getInt('idUsuario');

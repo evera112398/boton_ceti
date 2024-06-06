@@ -15,6 +15,7 @@ import 'package:boton_ceti/models/send_email_code.dart';
 import 'package:boton_ceti/models/send_sms_code.dart';
 import 'package:boton_ceti/models/text_input.dart';
 import 'package:boton_ceti/models/timer.dart';
+import 'package:boton_ceti/views/legal_doc.dart';
 import 'package:boton_ceti/views/login.dart';
 import 'package:boton_ceti/views/validate_email.dart';
 import 'package:boton_ceti/views/validate_sms.dart';
@@ -22,6 +23,7 @@ import 'package:crypto/crypto.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -112,6 +114,9 @@ class _RegisterScreenState extends State<RegisterScreen>
   bool _cellphoneValidateButtonEnabled = false;
   bool showFirstPasswordRequirement = false;
   bool showSecondPasswordRequirement = false;
+  bool acepto = false;
+
+  late FToast fToast;
 
   String emailRegexPool = '';
   late RegExp emailRegex;
@@ -179,6 +184,8 @@ class _RegisterScreenState extends State<RegisterScreen>
     getEstablecimientos().whenComplete(() {
       buildEmailRegexPattern();
     });
+    fToast = FToast();
+    fToast.init(context);
   }
 
   @override
@@ -293,12 +300,48 @@ class _RegisterScreenState extends State<RegisterScreen>
     }
   }
 
+  _showToast(String message) {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.grey.shade300,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(
+            width: 6,
+          ),
+          Expanded(
+            flex: 4,
+            child: Text(
+              message,
+              softWrap: true,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: const Duration(seconds: 3),
+    );
+  }
+
   void registerNewUser() async {
     bool allValid = true;
     for (var key in registerFormKeys) {
       if (!key.currentState!.validate()) {
         allValid = false;
       }
+    }
+    if (!acepto) {
+      allValid = false;
+      _showToast('Los términos y condiciones son obligatorios.');
     }
     if (allValid) {
       final passToHash = utf8.encode(passwordController[0].text);
@@ -1112,6 +1155,51 @@ class _RegisterScreenState extends State<RegisterScreen>
                             ),
                           ),
                           const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Checkbox(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                activeColor: VariablesGlobales.coloresApp[1],
+                                value: acepto,
+                                onChanged: (value) {
+                                  if (!acepto) {
+                                    Future.microtask(
+                                      () => Navigator.of(context)
+                                          .push(
+                                        crearRutaNamed(
+                                          const LegalDoc(
+                                            docType: 'Términos y condiciones',
+                                          ),
+                                          'termsConditions',
+                                        ),
+                                      )
+                                          .then((value) {
+                                        setState(() {
+                                          acepto = value;
+                                        });
+                                      }),
+                                    );
+                                  } else {
+                                    acepto = !acepto;
+                                  }
+                                  setState(() {});
+                                },
+                              ),
+                              const Expanded(
+                                child: Text(
+                                  'Acepto los términos y condiciones.',
+                                  style: TextStyle(
+                                    fontFamily: 'Nutmeg',
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                  softWrap: true,
+                                ),
+                              )
+                            ],
+                          )
                           // const SizedBox(height: 20),
                           // ExpansionTileBuilder(
                           //   //!ExpansionTile para documentos legales.
