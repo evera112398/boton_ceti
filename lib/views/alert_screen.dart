@@ -31,6 +31,7 @@ class _AlertScreenState extends State<AlertScreen> {
   }
 
   Future<void> loadUserProfiles() async {
+    if (!mounted) return;
     final singletonProvider =
         Provider.of<ControllersProvider>(context, listen: false);
     await singletonProvider.loginController
@@ -46,25 +47,30 @@ class _AlertScreenState extends State<AlertScreen> {
   }
 
   void populateUserProfilesCard() {
-    final alertString = json.decode(LocalStorage.userProfiles!);
-    int totalInsertions = alertString.length;
-    var future = Future(() {});
-    for (var i = 0; i < totalInsertions; i++) {
-      future = future.then((value) {
-        return Future.delayed(const Duration(milliseconds: 100), () async {
-          alerts.add(
-            AlertData(
-              alertTitle: alertString[i]['alertTitle'],
-              alertText: alertString[i]['alertText'],
-              resourcePath: alertString[i]['resourcePath'],
-              alertId: alertString[i]['alertId'],
-            ),
-          );
-          profilesKey.currentState!.insertItem(i);
+    if (LocalStorage.userProfiles != null) {
+      final alertString = json.decode(LocalStorage.userProfiles!);
+      int totalInsertions = alertString.length;
+      var future = Future(() {});
+      for (var i = 0; i < totalInsertions; i++) {
+        future = future.then((value) {
+          return Future.delayed(const Duration(milliseconds: 100), () async {
+            alerts.add(
+              AlertData(
+                alertTitle: alertString[i]['alertTitle'],
+                alertText: alertString[i]['alertText'],
+                resourcePath: alertString[i]['resourcePath'],
+                alertId: alertString[i]['alertId'],
+              ),
+            );
+            if (profilesKey.currentState != null) {
+              profilesKey.currentState!.insertItem(i);
+            }
+          });
         });
-      });
+      }
+      if (!mounted) return;
+      RebuildUI.rebuild(context, setState);
     }
-    RebuildUI.rebuild(context, setState);
   }
 
   @override
