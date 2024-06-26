@@ -22,11 +22,34 @@ class SendRecuperaPassCode extends StatefulWidget {
 }
 
 class _SendRecuperaPassCodeState extends State<SendRecuperaPassCode> {
-  bool succesfullySent = true;
+  bool successfullySent = true;
+  bool _hasCalledRecuperarPass = false;
+  Future<dynamic>? _recuperarPassFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _callRecuperarPass();
+  }
+
+  void _callRecuperarPass() {
+    if (!_hasCalledRecuperarPass) {
+      final singletonProvider =
+          Provider.of<ControllersProvider>(context, listen: false);
+      _recuperarPassFuture = Future.delayed(
+        const Duration(seconds: 2),
+      ).then(
+        (value) => singletonProvider.usuariosController.recuperarPass(
+          widget.celular,
+          widget.usuario,
+        ),
+      );
+      _hasCalledRecuperarPass = true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final singletonProvider =
-        Provider.of<ControllersProvider>(context, listen: false);
     return WillPopScope(
       onWillPop: () async => false,
       child: StatefulBuilder(
@@ -53,18 +76,10 @@ class _SendRecuperaPassCodeState extends State<SendRecuperaPassCode> {
                 ),
                 width: width,
                 child: FutureBuilder(
-                  future: Future.delayed(
-                    const Duration(seconds: 2),
-                  ).then(
-                    (value) =>
-                        singletonProvider.usuariosController.recuperarPass(
-                      widget.celular,
-                      widget.usuario,
-                    ),
-                  ),
+                  future: _recuperarPassFuture,
                   builder: (context, AsyncSnapshot snapshot) {
                     if (snapshot.hasError) {
-                      succesfullySent = false;
+                      successfullySent = false;
                       RebuildUI.rebuild(context, setState);
                       return const ErrorPopupContent(
                         error: 'Sucedió un error inesperado.',
@@ -72,10 +87,11 @@ class _SendRecuperaPassCodeState extends State<SendRecuperaPassCode> {
                     }
                     if (snapshot.hasData) {
                       if (!snapshot.data['ok']) {
-                        succesfullySent = false;
+                        successfullySent = false;
                         RebuildUI.rebuild(context, setState);
                         return ErrorPopupContent(
-                            error: snapshot.data['payload']);
+                          error: snapshot.data['payload'],
+                        );
                       }
                       Navigator.of(context).pop();
 
@@ -101,7 +117,7 @@ class _SendRecuperaPassCodeState extends State<SendRecuperaPassCode> {
                           child: CircularProgressIndicator(
                             color: VariablesGlobales.coloresApp[1],
                           ),
-                        )
+                        ),
                       ],
                     );
                   },
@@ -109,7 +125,7 @@ class _SendRecuperaPassCodeState extends State<SendRecuperaPassCode> {
               );
             },
           ),
-          actions: succesfullySent
+          actions: successfullySent
               ? null
               : [
                   ElevatedButton(
@@ -131,46 +147,3 @@ class _SendRecuperaPassCodeState extends State<SendRecuperaPassCode> {
     );
   }
 }
-
-  // Future<void> sendValidationCode() async {
-  //   final singletonProvider =
-  //       Provider.of<ControllersProvider>(context, listen: false);
-  //   WidgetsBinding.instance.addPostFrameCallback(
-  //     (timeStamp) {
-  //       showDialog(
-  //         context: context,
-  //         barrierDismissible: false,
-  //         builder: (context) {
-  //           return WillPopScope(
-  //             onWillPop: () async => false,
-  //             child: VariableFutureBuilder(
-  //               future: Future.delayed(const Duration(seconds: 2)).then(
-  //                 (value) => singletonProvider.usuariosController
-  //                     .sendCodigoValidacionCorreo(
-  //                   emailController.text,
-  //                 ),
-  //               ),
-  //               nextScreen: const ValidateEmail(),
-  //               nextScreenName: 'validateEmail',
-  //               actions: [
-  //                 ElevatedButton(
-  //                   onPressed: () => Navigator.of(context).pop(),
-  //                   style: ElevatedButton.styleFrom(
-  //                     backgroundColor: VariablesGlobales.coloresApp[1],
-  //                   ),
-  //                   child: const Text(
-  //                     'Aceptar',
-  //                     style: TextStyle(
-  //                       fontFamily: 'Nutmeg',
-  //                       fontWeight: FontWeight.w300,
-  //                     ),
-  //                   ),
-  //                 )
-  //               ],
-  //             ),
-  //           );
-  //         },
-  //       );
-  //     },
-  //   );
-  // }

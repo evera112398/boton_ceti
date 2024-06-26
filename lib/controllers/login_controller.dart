@@ -15,7 +15,7 @@ class LoginController extends ChangeNotifier {
   bool ok = false;
   Map<dynamic, dynamic> decodeResp = {};
 
-  final String? baseUrl = dotenv.env['API_USUARIOS'];
+  final bool test = dotenv.env['PRUEBAS']?.toLowerCase() == 'true';
   final String? appToken = dotenv.env['APP_KEY'];
   final String? appId = dotenv.env['ID_APP'];
   final String? keyCipher = dotenv.env['APP_NAME'];
@@ -24,6 +24,8 @@ class LoginController extends ChangeNotifier {
   final EncryptionController encryptController = EncryptionController();
 
   LoginController() {
+    final String? baseUrl =
+        test ? dotenv.env['API_PRUEBAS'] : dotenv.env['API_USUARIOS'];
     _baseUrl = encryptController.decrypt(baseUrl);
     _appId = encryptController.decrypt(appId);
     _appToken = encryptController.decrypt(appToken);

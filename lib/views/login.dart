@@ -1,5 +1,6 @@
 import 'package:boton_ceti/animations/page_animation.dart';
 import 'package:boton_ceti/controllers/controllers_provider.dart';
+import 'package:boton_ceti/controllers/encryption_controller.dart';
 import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/models/app_banner.dart';
 import 'package:boton_ceti/models/error_popup_content.dart';
@@ -33,6 +34,13 @@ class _LoginScreenState extends State<LoginScreen> {
     FocusNode(),
   ];
   int passLength = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    print(EncryptionController()
+        .encrypt('http://172.16.30.48:3005/securepush/usuarios'));
+  }
 
   Future<void> doLogin() async {
     // if (_formKey.currentState!.validate()) {

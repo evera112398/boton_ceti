@@ -114,7 +114,13 @@ class _RegisterScreenState extends State<RegisterScreen>
   bool _cellphoneValidateButtonEnabled = false;
   bool showFirstPasswordRequirement = false;
   bool showSecondPasswordRequirement = false;
+  bool termsConditionsCheck = false;
+  bool privacyNoticeCheck = false;
+
   bool acepto = false;
+
+  Map<String, dynamic> termsConditions = {};
+  Map<String, dynamic> privacyNotice = {};
 
   late FToast fToast;
 
@@ -186,6 +192,19 @@ class _RegisterScreenState extends State<RegisterScreen>
     });
     fToast = FToast();
     fToast.init(context);
+    loadLegalDocs();
+  }
+
+  Future<void> loadLegalDocs() async {
+    final singletonProvider =
+        Provider.of<ControllersProvider>(context, listen: false);
+    final response =
+        await singletonProvider.usuariosController.getAplicacionTerminos();
+    if (!response['ok']) {
+      return;
+    }
+    termsConditions = response['payload'][0];
+    privacyNotice = response['payload'][1];
   }
 
   @override
@@ -339,9 +358,10 @@ class _RegisterScreenState extends State<RegisterScreen>
         allValid = false;
       }
     }
+    acepto = termsConditionsCheck && privacyNoticeCheck;
     if (!acepto) {
       allValid = false;
-      _showToast('Los términos y condiciones son obligatorios.');
+      _showToast('Los documentos legales son obligatorios.');
     }
     if (allValid) {
       final passToHash = utf8.encode(passwordController[0].text);
@@ -1163,27 +1183,29 @@ class _RegisterScreenState extends State<RegisterScreen>
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 activeColor: VariablesGlobales.coloresApp[1],
-                                value: acepto,
+                                value: termsConditionsCheck,
                                 onChanged: (value) {
-                                  if (!acepto) {
+                                  if (!termsConditionsCheck) {
                                     Future.microtask(
                                       () => Navigator.of(context)
                                           .push(
                                         crearRutaNamed(
-                                          const LegalDoc(
+                                          LegalDoc(
                                             docType: 'Términos y condiciones',
+                                            docContent: termsConditions,
                                           ),
                                           'termsConditions',
                                         ),
                                       )
                                           .then((value) {
                                         setState(() {
-                                          acepto = value;
+                                          termsConditionsCheck = value;
                                         });
                                       }),
                                     );
                                   } else {
-                                    acepto = !acepto;
+                                    termsConditionsCheck =
+                                        !termsConditionsCheck;
                                   }
                                   setState(() {});
                                 },
@@ -1191,6 +1213,52 @@ class _RegisterScreenState extends State<RegisterScreen>
                               const Expanded(
                                 child: Text(
                                   'Acepto los términos y condiciones.',
+                                  style: TextStyle(
+                                    fontFamily: 'Nutmeg',
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                  softWrap: true,
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Checkbox(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                activeColor: VariablesGlobales.coloresApp[1],
+                                value: privacyNoticeCheck,
+                                onChanged: (value) {
+                                  if (!privacyNoticeCheck) {
+                                    Future.microtask(
+                                      () => Navigator.of(context)
+                                          .push(
+                                        crearRutaNamed(
+                                          LegalDoc(
+                                            docType: 'Términos y condiciones',
+                                            docContent: privacyNotice,
+                                          ),
+                                          'privacyNotice',
+                                        ),
+                                      )
+                                          .then((value) {
+                                        setState(() {
+                                          privacyNoticeCheck = value;
+                                        });
+                                      }),
+                                    );
+                                  } else {
+                                    privacyNoticeCheck = !privacyNoticeCheck;
+                                  }
+                                  setState(() {});
+                                },
+                              ),
+                              const Expanded(
+                                child: Text(
+                                  'Acepto el aviso de privacidad.',
                                   style: TextStyle(
                                     fontFamily: 'Nutmeg',
                                     fontWeight: FontWeight.w300,

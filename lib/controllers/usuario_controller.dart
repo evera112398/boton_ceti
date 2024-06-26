@@ -14,7 +14,7 @@ class UsuariosController extends ChangeNotifier {
   bool ok = false;
   Map<dynamic, dynamic> decodeResp = {};
 
-  final String? baseUrl = dotenv.env['API_USUARIOS'];
+  final bool test = dotenv.env['PRUEBAS']?.toLowerCase() == 'true';
   final String? appToken = dotenv.env['APP_KEY'];
   final String? appId = dotenv.env['ID_APP'];
   final String? keyCipher = dotenv.env['APP_NAME'];
@@ -23,6 +23,8 @@ class UsuariosController extends ChangeNotifier {
   final EncryptionController encryptController = EncryptionController();
 
   UsuariosController() {
+    final String? baseUrl =
+        test ? dotenv.env['API_PRUEBAS'] : dotenv.env['API_USUARIOS'];
     _baseUrl = encryptController.decrypt(baseUrl);
     _appId = encryptController.decrypt(appId);
     _appToken = encryptController.decrypt(appToken);
@@ -503,6 +505,46 @@ class UsuariosController extends ChangeNotifier {
       ok = decodeResp['ok'];
       if (ok) {
         return {'ok': ok, 'exc': false, 'payload': decodeResp['usuario']};
+      } else {
+        decodeResp.remove('ok');
+        return {
+          'ok': ok,
+          'exc': false,
+          'payload': decodeResp['message'],
+        };
+      }
+    } on TimeoutException {
+      return _handleError(
+          'El servidor está tardando en responder. Inténtalo de nuevo más tarde.');
+    } on SocketException {
+      return _handleError(
+          'Verifica tu conexión a internet. Inténtalo de nuevo más tarde.');
+    } catch (ex) {
+      return _handleError(
+          'Sucedió un error inesperado. Inténtalo de nuevo más tarde.');
+    }
+  }
+
+  Future<Map<String, dynamic>> getAplicacionTerminos() async {
+    try {
+      final requestBody = {
+        "id_aplicacion": _appId,
+      };
+
+      final requestHeaders = {
+        "Content-Type": "application/json",
+        "auth": _appToken,
+      };
+
+      final resp = await http
+          .post(Uri.parse('$_baseUrl/getAplicacionTerminos'),
+              headers: requestHeaders, body: json.encode(requestBody))
+          .timeout(const Duration(seconds: 30));
+
+      decodeResp = json.decode(resp.body);
+      ok = decodeResp['ok'];
+      if (ok) {
+        return {'ok': ok, 'exc': false, 'payload': decodeResp['terminos']};
       } else {
         decodeResp.remove('ok');
         return {
