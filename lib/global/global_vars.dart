@@ -247,6 +247,84 @@ class VariablesGlobales {
       location: const LatLng(20.703493067021544, -103.38945192454682),
       buildingType: 'Edificio',
     ),
+    PlacesData(
+      displayText: 'Dirección General (Edificio L)',
+      plantel: planteles[1],
+      location: const LatLng(20.629846304746657, -103.25146865947686),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Edificio C',
+      plantel: planteles[1],
+      location: const LatLng(20.62958649723716, -103.25119507416564),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Edificio E',
+      plantel: planteles[1],
+      location: const LatLng(20.62964046694954, -103.25099390849566),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Edificio D',
+      plantel: planteles[1],
+      location: const LatLng(20.62932166883625, -103.25086248025791),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Edificio B',
+      plantel: planteles[1],
+      location: const LatLng(20.62974840631689, -103.25074312196037),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Edificio G',
+      plantel: planteles[1],
+      location: const LatLng(20.630212795745074, -103.25096038088397),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Edificio A',
+      plantel: planteles[1],
+      location: const LatLng(20.630093560756826, -103.25120982631479),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Edificio H',
+      plantel: planteles[1],
+      location: const LatLng(20.630595602188897, -103.25138551100154),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Edificio N',
+      plantel: planteles[1],
+      location: const LatLng(20.63026802034795, -103.2503783415332),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Edificio F',
+      plantel: planteles[1],
+      location: const LatLng(20.630675928668737, -103.25103816493444),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Edificio K',
+      plantel: planteles[1],
+      location: const LatLng(20.630909377246923, -103.25084370478218),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Edificio I',
+      plantel: planteles[1],
+      location: const LatLng(20.630394587138266, -103.25073823299688),
+      buildingType: 'Edificio',
+    ),
+    PlacesData(
+      displayText: 'Cancha techada',
+      plantel: planteles[1],
+      location: const LatLng(20.630004758099528, -103.25064532309419),
+      buildingType: 'Edificio',
+    ),
   ];
 
   static Map<String, List<LatLng>> coordinatesPlanteles = {

@@ -435,6 +435,62 @@ class UsuariosController extends ChangeNotifier {
     }
   }
 
+  Future<Map<String, dynamic>> updatePassword(
+      String password, String newPassword, String newPassword1) async {
+    try {
+      final passToHash = utf8.encode(password);
+      final hashedPassword = sha512.convert(passToHash);
+      final newPassToHash = utf8.encode(newPassword);
+      final newPasswordhashed = sha512.convert(newPassToHash);
+      final newPassToHash1 = utf8.encode(newPassword1);
+      final newPasswordhashed1 = sha512.convert(newPassToHash1);
+
+      final requestBody = {
+        "id_usuario": LocalStorage.idUsuario,
+        "id_aplicacion": _appId,
+        "password": hashedPassword.toString(),
+        "new_password": newPasswordhashed.toString(),
+        "new_password2": newPasswordhashed1.toString()
+      };
+
+      final requestHeaders = {
+        "Content-Type": "application/json",
+        "auth": _appToken,
+        "token": LocalStorage.tokenUsuario!
+      };
+
+      final resp = await http
+          .post(Uri.parse('$_baseUrl/updatePassword'),
+              headers: requestHeaders, body: json.encode(requestBody))
+          .timeout(const Duration(seconds: 30));
+
+      decodeResp = json.decode(resp.body);
+      ok = decodeResp['ok'];
+      if (ok) {
+        return {
+          'ok': ok,
+          'exc': false,
+        };
+      } else {
+        decodeResp.remove('ok');
+        return {
+          'ok': ok,
+          'exc': false,
+          'payload': decodeResp['message'],
+        };
+      }
+    } on TimeoutException {
+      return _handleError(
+          'El servidor está tardando en responder. Inténtalo de nuevo más tarde.');
+    } on SocketException {
+      return _handleError(
+          'Verifica tu conexión a internet. Inténtalo de nuevo más tarde.');
+    } catch (ex) {
+      return _handleError(
+          'Sucedió un error inesperado. Inténtalo de nuevo más tarde.');
+    }
+  }
+
   Future<Map<String, dynamic>> getUsuario() async {
     try {
       final requestBody = {
