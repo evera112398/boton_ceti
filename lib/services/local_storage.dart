@@ -40,6 +40,7 @@ class LocalStorage {
                     style: TextStyle(
                       fontFamily: 'Nutmeg',
                       fontWeight: FontWeight.w300,
+                      color: Colors.white,
                     ),
                   ),
                 )
@@ -97,9 +98,7 @@ class LocalStorage {
 
   static void printPreferences() {
     final keys = prefs.getKeys();
-    for (String key in keys) {
-      print('$key: ${prefs.get(key)}');
-    }
+    for (String key in keys) {}
   }
 
   static int? get idUsuario {

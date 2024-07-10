@@ -9,7 +9,6 @@ import 'package:boton_ceti/models/password_conditions.dart';
 import 'package:boton_ceti/models/text_input.dart';
 import 'package:boton_ceti/models/timer.dart';
 import 'package:boton_ceti/views/home_screen.dart';
-import 'package:boton_ceti/views/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:lottie/lottie.dart';
@@ -171,8 +170,8 @@ class _ChangePasswordInAppState extends State<ChangePasswordInApp>
   }
 
   Widget successContent() {
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Column(
@@ -287,6 +286,7 @@ class _ChangePasswordInAppState extends State<ChangePasswordInApp>
                       style: TextStyle(
                         fontFamily: 'Nutmeg',
                         fontWeight: FontWeight.w300,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -344,8 +344,6 @@ class _ChangePasswordInAppState extends State<ChangePasswordInApp>
 
   @override
   Widget build(BuildContext context) {
-    double remainingHeight =
-        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return Scaffold(
       body: SafeArea(
         child: NotificationListener<OverscrollIndicatorNotification>(
@@ -371,6 +369,7 @@ class _ChangePasswordInAppState extends State<ChangePasswordInApp>
                       flex: 1,
                       child: AppBanner(
                         displayText: 'Ingresa nueva contraseña:',
+                        hasAnteriorScreen: true,
                       ),
                     ),
                     Expanded(
@@ -606,6 +605,7 @@ class _ChangePasswordInAppState extends State<ChangePasswordInApp>
                                                       fontFamily: 'Nutmeg',
                                                       fontWeight:
                                                           FontWeight.w300,
+                                                      color: Colors.white,
                                                     ),
                                                   ),
                                                 ),

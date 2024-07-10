@@ -404,8 +404,8 @@ class _RegisterScreenState extends State<RegisterScreen>
       barrierDismissible: false,
       context: context,
       builder: (context) {
-        return WillPopScope(
-          onWillPop: () async => false,
+        return PopScope(
+          canPop: false,
           child: AlertDialog(
             insetPadding: const EdgeInsets.symmetric(horizontal: 10),
             shape: const RoundedRectangleBorder(
@@ -606,7 +606,9 @@ class _RegisterScreenState extends State<RegisterScreen>
                 children: [
                   const Expanded(
                     flex: 1,
-                    child: AppBanner(),
+                    child: AppBanner(
+                      hasAnteriorScreen: true,
+                    ),
                   ),
                   Expanded(
                     flex: 4,
@@ -1322,8 +1324,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                               child: const Text(
                                 'Registrarme',
                                 style: TextStyle(
-                                  fontFamily: 'Nutmeg',
-                                ),
+                                    fontFamily: 'Nutmeg', color: Colors.white),
                               ),
                             ),
                           ),

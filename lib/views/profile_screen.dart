@@ -2,7 +2,6 @@ import 'package:boton_ceti/animations/page_animation.dart';
 import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/models/list_element.dart';
 import 'package:boton_ceti/services/local_storage.dart';
-import 'package:boton_ceti/views/change_password.dart';
 import 'package:boton_ceti/views/change_password_in_app.dart';
 import 'package:boton_ceti/views/edit_profile_screen.dart';
 import 'package:flutter/material.dart';

@@ -27,6 +27,7 @@ class _AdaptativeButtonState extends State<AdaptativeButton> {
         widget.buttonText,
         style: const TextStyle(
           fontFamily: 'Nutmeg',
+          color: Colors.white,
         ),
       ),
     );

@@ -96,8 +96,8 @@ class _StartAlertDialogState extends State<StartAlertDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: !emitNewAlert
           ? IntrinsicHeight(
               child: DynamicAlertDialog(
@@ -121,7 +121,12 @@ class _StartAlertDialogState extends State<StartAlertDialog> {
                       _checkLocation();
                       setState(() {});
                     },
-                    child: const Text('Aceptar'),
+                    child: const Text(
+                      'Aceptar',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ],
                 child: LayoutBuilder(
@@ -245,6 +250,7 @@ class _StartAlertDialogState extends State<StartAlertDialog> {
                           style: TextStyle(
                             fontFamily: 'Nutmeg',
                             fontWeight: FontWeight.w300,
+                            color: Colors.white,
                           ),
                         ),
                       )

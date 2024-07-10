@@ -1,10 +1,13 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
 class AppBanner extends StatelessWidget {
   final String? displayText;
-  const AppBanner({super.key, this.displayText});
+  final bool hasAnteriorScreen;
+  const AppBanner(
+      {super.key, this.displayText, required this.hasAnteriorScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +101,21 @@ class AppBanner extends StatelessWidget {
               );
             },
           ),
+          if (Platform.isIOS && hasAnteriorScreen) ...[
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                  ),
+                )
+              ],
+            )
+          ]
         ],
       ),
     );

@@ -254,8 +254,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView>
     await showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => WillPopScope(
-        onWillPop: () async => false,
+      builder: (context) => PopScope(
+        canPop: false,
         child: DynamicAlertDialog(
           actions: hasError
               ? [
@@ -278,6 +278,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView>
                       style: TextStyle(
                         fontFamily: 'Nutmeg',
                         fontWeight: FontWeight.w300,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -369,6 +370,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView>
                       flex: 1,
                       child: AppBanner(
                         displayText: 'Ingresa nueva contraseña:',
+                        hasAnteriorScreen: true,
                       ),
                     ),
                     Expanded(
@@ -571,6 +573,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView>
                                                   style: TextStyle(
                                                     fontFamily: 'Nutmeg',
                                                     fontWeight: FontWeight.w300,
+                                                    color: Colors.white,
                                                   ),
                                                 ),
                                               ),

@@ -90,8 +90,8 @@ class MapScreenState extends State<MapScreen> {
         () => showDialog(
           context: context,
           builder: (context) {
-            return WillPopScope(
-              onWillPop: () async => false,
+            return PopScope(
+              canPop: false,
               child: DynamicAlertDialog(
                 actions: [
                   ElevatedButton(
@@ -110,6 +110,7 @@ class MapScreenState extends State<MapScreen> {
                       style: TextStyle(
                         fontFamily: 'Nutmeg',
                         fontWeight: FontWeight.w300,
+                        color: Colors.white,
                       ),
                     ),
                   )
@@ -179,8 +180,8 @@ class MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         body: Stack(
           children: [

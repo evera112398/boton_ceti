@@ -85,6 +85,7 @@ class _RecoverPasswordState extends State<RecoverPassword> {
                       flex: 1,
                       child: AppBanner(
                         displayText: 'Recuperar contraseña',
+                        hasAnteriorScreen: true,
                       ),
                     ),
                     Expanded(
@@ -219,9 +220,9 @@ class _RecoverPasswordState extends State<RecoverPassword> {
                                               child: const Text(
                                                 'Enviar',
                                                 style: TextStyle(
-                                                  fontFamily: 'Nutmeg',
-                                                  fontWeight: FontWeight.w300,
-                                                ),
+                                                    fontFamily: 'Nutmeg',
+                                                    fontWeight: FontWeight.w300,
+                                                    color: Colors.white),
                                               ),
                                             ),
                                           ),

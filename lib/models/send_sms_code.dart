@@ -19,8 +19,8 @@ class _SendSMSCodeState extends State<SendSMSCode> {
   Widget build(BuildContext context) {
     final singletonProvider =
         Provider.of<ControllersProvider>(context, listen: false);
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: StatefulBuilder(
         builder: (context, setState) => AlertDialog(
           contentPadding: EdgeInsets.zero,
@@ -99,6 +99,7 @@ class _SendSMSCodeState extends State<SendSMSCode> {
                       style: TextStyle(
                         fontFamily: 'Nutmeg',
                         fontWeight: FontWeight.w300,
+                        color: Colors.white,
                       ),
                     ),
                   ),

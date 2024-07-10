@@ -174,9 +174,9 @@ class _ValidateRecuperaPassState extends State<ValidateRecuperaPass> {
                 child: const Text(
                   'Aceptar',
                   style: TextStyle(
-                    fontFamily: 'Nutmeg',
-                    fontWeight: FontWeight.w300,
-                  ),
+                      fontFamily: 'Nutmeg',
+                      fontWeight: FontWeight.w300,
+                      color: Colors.white),
                 ),
               ),
             ],
@@ -188,10 +188,15 @@ class _ValidateRecuperaPassState extends State<ValidateRecuperaPass> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.of(context).pop(false);
-        return false;
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) {
+          return;
+        }
+        if (context.mounted) {
+          Navigator.pop(context, false);
+        }
       },
       child: GestureDetector(
         onTap: () {
@@ -225,7 +230,9 @@ class _ValidateRecuperaPassState extends State<ValidateRecuperaPass> {
               children: [
                 const Expanded(
                   flex: 1,
-                  child: AppBanner(),
+                  child: AppBanner(
+                    hasAnteriorScreen: true,
+                  ),
                 ),
                 Expanded(
                   flex: 5,

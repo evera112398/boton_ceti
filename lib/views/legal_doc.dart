@@ -9,10 +9,15 @@ class LegalDoc extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.of(context).pop(false);
-        return false;
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) {
+          return;
+        }
+        if (context.mounted) {
+          Navigator.pop(context, false);
+        }
       },
       child: Scaffold(
         body: SafeArea(
@@ -21,6 +26,7 @@ class LegalDoc extends StatelessWidget {
               Expanded(
                 flex: 1,
                 child: AppBanner(
+                  hasAnteriorScreen: false,
                   displayText: docContent['titulo'],
                 ),
               ),
@@ -52,7 +58,12 @@ class LegalDoc extends StatelessWidget {
                                 onPressed: () {
                                   Navigator.of(context).pop(false);
                                 },
-                                child: const Text('Rechazar'),
+                                child: const Text(
+                                  'Rechazar',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -65,7 +76,12 @@ class LegalDoc extends StatelessWidget {
                                 onPressed: () {
                                   Navigator.of(context).pop(true);
                                 },
-                                child: const Text('Aceptar'),
+                                child: const Text(
+                                  'Aceptar',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
                             )
                           ],

@@ -59,8 +59,8 @@ class _AlertDataBottomSheetState extends State<AlertDataBottomSheet> {
       () async => await showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (_) => WillPopScope(
-          onWillPop: () async => false,
+        builder: (_) => PopScope(
+          canPop: false,
           child: AlertDialog(
             contentPadding: EdgeInsets.zero,
             insetPadding: const EdgeInsets.symmetric(horizontal: 10),
@@ -162,7 +162,12 @@ class _AlertDataBottomSheetState extends State<AlertDataBottomSheet> {
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                     ),
-                                    child: const Text('Aceptar'),
+                                    child: const Text(
+                                      'Aceptar',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ),
                                 )
                               ],

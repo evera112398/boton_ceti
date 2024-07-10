@@ -1,6 +1,5 @@
 import 'package:boton_ceti/animations/page_animation.dart';
 import 'package:boton_ceti/controllers/controllers_provider.dart';
-import 'package:boton_ceti/controllers/encryption_controller.dart';
 import 'package:boton_ceti/global/global_vars.dart';
 import 'package:boton_ceti/models/app_banner.dart';
 import 'package:boton_ceti/models/error_popup_content.dart';
@@ -38,8 +37,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    print(EncryptionController()
-        .encrypt('http://172.16.30.48:3005/securepush/usuarios'));
   }
 
   Future<void> doLogin() async {
@@ -50,7 +47,6 @@ class _LoginScreenState extends State<LoginScreen> {
     //   loginControllers[0].text,
     //   loginControllers[1].text,
     // );
-    // print(response);
     // }
     loginAlertDialog(context);
   }
@@ -163,7 +159,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const Expanded(
                     flex: 1,
-                    child: AppBanner(),
+                    child: AppBanner(
+                      hasAnteriorScreen: false,
+                    ),
                   ),
                   Expanded(
                     flex: 4,
@@ -312,6 +310,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 child: const Text(
                                                   'Ingresar',
                                                   style: TextStyle(
+                                                    color: Colors.white,
                                                     fontFamily: 'Nutmeg',
                                                   ),
                                                 ),

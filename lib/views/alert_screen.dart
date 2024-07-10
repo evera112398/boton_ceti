@@ -86,6 +86,7 @@ class _AlertScreenState extends State<AlertScreen> {
               Expanded(
                 flex: 1,
                 child: AppBanner(
+                  hasAnteriorScreen: false,
                   displayText: 'Bienvenido: ${LocalStorage.nombre}',
                 ),
               ),

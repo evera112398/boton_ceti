@@ -34,8 +34,8 @@ class _NoLocationScreenState extends State<NoLocationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         backgroundColor: VariablesGlobales.bgColor,
         body: SafeArea(
@@ -142,8 +142,12 @@ class _NoLocationScreenState extends State<NoLocationScreen> {
                                                       BorderRadius.circular(20),
                                                 ),
                                               ),
-                                              child:
-                                                  const Text('Permitir acceso'),
+                                              child: const Text(
+                                                'Permitir acceso',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ),

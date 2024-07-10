@@ -8,8 +8,8 @@ class NoInternetPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: AlertDialog(
         insetPadding: const EdgeInsets.symmetric(horizontal: 10),
         shape: const RoundedRectangleBorder(
@@ -76,6 +76,7 @@ class NoInternetPopup extends StatelessWidget {
               'Reintentar',
               style: TextStyle(
                 fontFamily: 'Nutmeg',
+                color: Colors.white,
               ),
             ),
           )

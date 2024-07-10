@@ -73,6 +73,7 @@ class _ResizableControlState extends State<ResizableControl> {
                 style: const TextStyle(
                   fontFamily: 'Nutmeg',
                   fontWeight: FontWeight.w300,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -92,6 +93,7 @@ class _ResizableControlState extends State<ResizableControl> {
               onPressed: cancelEditing,
               child: const Icon(
                 Icons.cancel_outlined,
+                color: Colors.white,
               ),
             ),
           ),

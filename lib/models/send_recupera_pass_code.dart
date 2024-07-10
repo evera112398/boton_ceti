@@ -50,8 +50,8 @@ class _SendRecuperaPassCodeState extends State<SendRecuperaPassCode> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: StatefulBuilder(
         builder: (context, setState) => AlertDialog(
           contentPadding: EdgeInsets.zero,
@@ -138,6 +138,7 @@ class _SendRecuperaPassCodeState extends State<SendRecuperaPassCode> {
                       style: TextStyle(
                         fontFamily: 'Nutmeg',
                         fontWeight: FontWeight.w300,
+                        color: Colors.white,
                       ),
                     ),
                   ),

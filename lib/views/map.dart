@@ -340,6 +340,7 @@ class _MapState extends State<Map> {
                         builder: (context, constraints) => Icon(
                           Icons.location_searching,
                           size: constraints.maxHeight * 0.4,
+                          color: Colors.white,
                         ),
                       ),
                     ),

@@ -143,7 +143,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void saveChanges() async {
     final singletonProvider =
         Provider.of<ControllersProvider>(context, listen: false);
-    print(idEstablecimiento);
     Map userData = {
       "nombre": controllers[0].text,
       "apellido_paterno": controllers[1].text,
@@ -170,8 +169,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     await showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => WillPopScope(
-        onWillPop: () async => false,
+      builder: (context) => PopScope(
+        canPop: false,
         child: DynamicAlertDialog(
           actions: hasError
               ? [
@@ -194,6 +193,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       style: TextStyle(
                         fontFamily: 'Nutmeg',
                         fontWeight: FontWeight.w300,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -318,6 +318,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     flex: 1,
                     child: AppBanner(
                       displayText: 'Editar perfil',
+                      hasAnteriorScreen: true,
                     ),
                   ),
                   Expanded(
