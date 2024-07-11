@@ -110,7 +110,12 @@ class _StartAlertDialogState extends State<StartAlertDialog> {
                       backgroundColor: Colors.red.shade700,
                     ),
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Cancelar'),
+                    child: const Text(
+                      'Cancelar',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(

@@ -25,13 +25,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
     <key>NSLocationAlwaysUsageDescription</key>
-    <string>Placeholder text</string>
+    <string>Necesitamos acceso a tu ubicación para poder enviar alertas mientras te encuentras en los planteles. Esto nos permite brindarte un entorno más seguro y proteger tu bienestar.</string>
     <key>NSLocationUsageDescription</key>
-    <string>Placeholder text</string>
+    <string>Necesitamos acceso a tu ubicación para poder enviar alertas mientras te encuentras en los planteles. Esto nos permite brindarte un entorno más seguro y proteger tu bienestar.</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Placeholder text</string>
+    <string>Necesitamos acceso a tu ubicación para poder enviar alertas mientras te encuentras en los planteles. Esto nos permite brindarte un entorno más seguro y proteger tu bienestar.</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Placeholder text</string>
+    <string>Necesitamos acceso a tu ubicación para poder enviar alertas mientras te encuentras en los planteles. Esto nos permite brindarte un entorno más seguro y proteger tu bienestar.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -39,15 +39,10 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
