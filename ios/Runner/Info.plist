@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Boton Ceti</string>
+	<string>SecurePush</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -17,21 +17,23 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>Necesitamos acceso a tu ubicación para poder enviar alertas mientras te encuentras en los planteles. Esto nos permite brindarte un entorno más seguro y proteger tu bienestar.</string>
-    <key>NSLocationUsageDescription</key>
-    <string>Necesitamos acceso a tu ubicación para poder enviar alertas mientras te encuentras en los planteles. Esto nos permite brindarte un entorno más seguro y proteger tu bienestar.</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Necesitamos acceso a tu ubicación para poder enviar alertas mientras te encuentras en los planteles. Esto nos permite brindarte un entorno más seguro y proteger tu bienestar.</string>
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Necesitamos acceso a tu ubicación para poder enviar alertas mientras te encuentras en los planteles. Esto nos permite brindarte un entorno más seguro y proteger tu bienestar.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Necesitamos acceso a tu ubicación para poder enviar alertas mientras te encuentras en los planteles. Esto nos permite brindarte un entorno más seguro y proteger tu bienestar.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Necesitamos acceso a tu ubicación para poder enviar alertas mientras te encuentras en los planteles. Esto nos permite brindarte un entorno más seguro y proteger tu bienestar.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Necesitamos acceso a tu ubicación para poder enviar alertas mientras te encuentras en los planteles. Esto nos permite brindarte un entorno más seguro y proteger tu bienestar.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Necesitamos acceso a tu ubicación para poder enviar alertas mientras te encuentras en los planteles. Esto nos permite brindarte un entorno más seguro y proteger tu bienestar.</string>
+    <key>UIRequiresFullScreen</key>
+    <true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
