@@ -30,6 +30,8 @@ class _BNavigationBarState extends State<BNavigationBar> {
       ),
       height: height * 0.1,
       child: AnimatedNotchBottomBar(
+        kBottomRadius: 30,
+        kIconSize: 30,
         color: VariablesGlobales.coloresApp[1],
         durationInMilliSeconds: 100,
         notchBottomBarController: widget.nbController,
