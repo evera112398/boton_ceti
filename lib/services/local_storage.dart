@@ -43,7 +43,7 @@ class LocalStorage {
                       color: Colors.white,
                     ),
                   ),
-                )
+                ),
               ],
               child: LayoutBuilder(
                 builder: (context, constraints) => Center(
